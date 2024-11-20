@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+    {# {% extends ... %} : Instruction Twig pour indiquer que ce template étend un autre template. 
+    Ici, il hérite du fichier 'base.html.twig', qui est le template principal. Cela signifie que ce template va réutiliser la structure définie dans 'base.html.twig'. #}
+
+{% block body %}
+    {# {% block body %} : Déclare un bloc de contenu appelé 'body'. 
+    Ce bloc est défini dans le template parent (base.html.twig) et permet d'insérer du contenu personnalisé. #}
+    
+    <div class="container my-5">
+
+        <div class="row">
+            <div class="col md-6">
+                <img src="/uploads/{{ product.illustration }}" class="img-fluid" alt="{{ product.name }}">
+            </div>
+            <div class="col md-6">
+                <small><i><a href="{{ path('app_category', { slug : product.category.slug} ) }}">{{ product.category.name }}</a> > {{ product.name}}</i></small>
+                <h1>{{ product.name}}</h1>
+                <span class="d-block mb-3">{{ product.priceWt|price }}</span>
+                {{ product.description|raw }}
+                <a href=" {{ path( 'app_cart_add', { id : product.id } ) }}" class="btn btn-success w-100 mt-3">Ajouter au panier</a>
+                
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+    {# {% endblock %} : Fin du bloc 'body'. Tout le contenu entre {% block body %} et {% endblock %} sera inséré dans le bloc correspondant du template parent 'base.html.twig'. #}
