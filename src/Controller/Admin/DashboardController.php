@@ -17,6 +17,8 @@ namespace App\Controller\Admin;
         - namespace : Définit l'espace de noms où cette classe est organisée. 
             - App\Controller\Admin / indique que ce fichier appartient au dossier Admin dans le répertoire Controller.
     */
+
+use App\Entity\Carrier;
 use App\Entity\User;
 use App\Entity\Product;
 use App\Entity\Category;
@@ -160,6 +162,19 @@ class DashboardController extends AbstractDashboardController
                 - 'fas fa-list' : Icône de liste pour chaque entrée de menu.
                 - Category::class et Product::class : Associe chaque lien aux entités Category et Product.
             */
+        yield MenuItem::linkToCrud('Transporteurs', 'fas fa-list', Carrier::class);
+            /*
+                - yield :
+                    - Role : Le mot-clé yield est utilisé pour generer des valeurs dans une methode ou une fonction. Dans ce cas pour definir un element dans un menu EasyAdmin
+                    - Particularité : Contrairement à return, qui termine l'execution d'une methode, yield permet de generer plusieurs valeurs succesivement
+                - MenuItem::linkToCrud
+                    - Role : C'est une methode static de la class MenuItem. Elle permet de créer un element dans le menu EasyAdmin qui pointe vers une page CRUD   
+                    - Parametres :
+                        - 'Transporteurs' : Texte affiché dans le menu, ce sera visible dans l'interface d'administration
+                        - 'fas fa-list' : Nom de l'icone a afficher a coté du texte dans le menu. c'est une class CSS de FontAwesome (ici une icone de liste)
+                        - Carrier::class : Spécifie l'entité ou le contrôleur CRUD associé. Ici, Carrier::class pointe vers l'entité Carrier, qui doit être gérée par un contrôleur CRUD. Symfony utilise ce nom pour lier l'élément de menu au contrôleur CRUD correspondant.
+            */
+
     }
 }
 
