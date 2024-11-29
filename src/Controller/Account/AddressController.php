@@ -10,6 +10,7 @@ namespace App\Controller\Account;
         - namespace : Definit l'espace de la classe, ici App\Controller indique que cette classe appartient au dossier Controller\Account de l’application Symfony.
     */
 
+use App\Classe\Cart;
 use App\Entity\Address;
     /*
         - Rôle : Classe de base pour tous les contrôleurs Symfony.
@@ -193,11 +194,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
             - defaults: ['id' => null] : Définit la valeur par défaut de $id à null.
         */
     //* -> Méthode
-    public function form(Request $request, $id, AddressRepository $addressRepository): Response 
+    public function form(Request $request, $id, AddressRepository $addressRepository, Cart $cart): Response 
         /*
             - $request : Objet contenant les données de la requête HTTP (comme les champs du formulaire soumis).
             - $id : Identifiant de l'adresse, utilisé pour savoir si on modifie ou crée une nouvelle adresse.
             - $addressRepository : Dépendance injectée pour manipuler les adresses.
+            - Cart $cart : Dépendance injectée pour manipuler le panier
         */
     {   
         //* 1. Récupération ou création d'une adresse
@@ -243,6 +245,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
                 'success',
                 "Votre adresse est correctement sauvegardée."
             );
+            
+            if ($cart->fullQuantity() > 0) {
+                return $this ->redirectToRoute("app_order");
+            }
 
             return $this->redirectToRoute("app_account_addresses");
         }
@@ -253,6 +259,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
                 - flush() : Exécute l'opération en base de données.
 
                 - $this->addFlash : Message flash qui informe l'utilisateur que l'adresse a été sauvegardée.
+
+                -if ($cart->fullQuantity() > 0) : si le panier est superieur a 0
+                - return $this ->redirectToRoute("app_order") : redirige sur la route (app_order) pour que si l'utilisateur n'avait pas d'adresse au moment de l'achat il sera redirigé apres la creation de celle ci au tunnel d'achat
 
                 - return $this->redirectToRoute("app_account_addresses"); : Redirection : Renvoie vers la liste des adresses.
             */
@@ -284,9 +293,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
         - Ajouter/modifier une adresse :
             - Route : /compte/adresse/ajouter/{id}
             - Vue Twig : addressForm.html.twig
-            - Contrôleur : méthode addressForm()
+            - Contrôleur : méthode form()
                 - Si {id} est présent : l’adresse est modifiée.
                 - Si {id} est null : une nouvelle adresse est créée.
+                - Si il y a plus de zero article l'user sera redirigé vers le tunnel d'achat
         - Supprimer une adresse :
             - Route : /compte/adresses/delete/{id}
             - Contrôleur : méthode addressDelete()

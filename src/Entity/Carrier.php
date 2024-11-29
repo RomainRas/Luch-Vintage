@@ -99,6 +99,33 @@ class Carrier
 !                        METHODES                          *
 ************************************************************
 */
+    //! ** __toString ** !//
+    //* -> Méthode magique `__toString()` qui permet de retourner le nom de la catégorie comme chaîne de caractères.
+    public function __tostring()
+    {
+        $price = number_format($this->getPrice(),'2',','). ' €';
+
+        return 
+        $this->getName().'<br/>'.
+        $price.'<br/>'.
+        $this->getText();
+    }
+        /*
+            - __toString() : Méthode spéciale PHP qui permet de définir comment l’objet Category sera converti en chaîne de caractères. Ici, elle retourne le nom de la catégorie.
+            - Elle est utile pour afficher les catégories dans les interfaces sans manipuler directement leurs propriétés.
+
+            - number_format : Fonction PHP qui formate un nombre selon le style défini.
+            - $this->getPrice() : Appelle la méthode pour récupérer le prix.
+            - '2' : Nombre de décimales affichées (ici, 2).
+            - ',' : Séparateur des décimales (par exemple, 10,50 €).
+            - ' €' : Ajoute le symbole euro après le prix.
+
+            - $this->getName() : Appelle la méthode pour obtenir le nom de l'objet (par exemple, le nom d'une catégorie ou d'un produit).
+            - <br/> : Balise HTML pour insérer un saut de ligne dans l'affichage.
+            - $price : Insère la chaîne formatée représentant le prix.
+            - $this->getText() : Récupère une description ou un texte associé à l'objet.
+        */
+
     //! id !//
     //* Retourne l'identifiant du transporteur.
     public function getId(): ?int
@@ -164,6 +191,9 @@ class Carrier
         - Description ($text) : Description longue (champ TEXT).
         - Prix ($price) : Prix T.T.C du transporteur.
 
+    - __toString() :
+        La méthode __toString() améliore l'expérience de manipulation des objets en PHP en permettant une conversion implicite en chaîne de caractères. Dans cet exemple, elle crée une représentation formatée et lisible d'une adresse pour un affichage dans une page web ou une réponse HTTP.
+            
 *Grâce à ces propriétés et méthodes, cette entité est utilisée pour stocker, récupérer et modifier les données des transporteurs dans l'application.
 
 */

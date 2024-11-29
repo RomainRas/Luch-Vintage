@@ -1,0 +1,10 @@
+{# https://getbootstrap.com/docs/4.0/components/badge/ #}
+{% if field.value == 1 %}
+    <span class="badge badge-secondary">En attente de paiement</span>
+{% elseif field.value == 2 %}
+    <span class="badge badge-secondary">Secondary</span>
+{% elseif field.value == 3 %}
+    <span class="badge badge-warning">Expedié</span>
+{% elseif field.value == 4 %}
+    <span class="badge badge-success">Livré</span>
+{% endif %}

@@ -1,5 +1,5 @@
 <?php
-
+//? Cette entité Product représente un produit dans l’application.
 
 /*
 ************************************************************

@@ -1,5 +1,5 @@
 <?php
-//! Formulaire qui gere l'inscription
+//? Formulaire qui gere l'inscription
     //! symfony console:make form
         //! Name of the form class : RegisterUserType
             //! Nom de la class lié : User

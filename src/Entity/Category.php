@@ -1,4 +1,5 @@
 <?php
+//? Cette entité Category représente une catégorie de produits dans l’application
 /*
 ************************************************************
 !           ESPACE ET IMPORTATION DES CLASSES              *

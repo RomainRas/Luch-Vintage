@@ -1,4 +1,5 @@
 <?php
+//? Entité qui represente l'adresse d'un utilisateur
 /*
 ************************************************************
 !           ESPACE ET IMPORTATION DES CLASSES              *
@@ -105,6 +106,31 @@ class Address
 !                        METHODES                          *
 ************************************************************
 */
+
+    //! ** __toString ** !//
+    //* -> Méthode magique `__toString()` qui permet de retourner le nom de la catégorie comme chaîne de caractères.
+    public function __toString()
+    {
+        return 
+        $this->getFirstname().' '.$this->getLastname().'<br/>'.
+        $this->getAddress().'<br/>'.
+        $this->getPostal().' '.$this->getCity().'<br/>'.
+        $this->getCountry();
+    }
+        /*
+            - public : La méthode est accessible depuis l'extérieur de la classe.
+            - function : Mot-clé pour déclarer une méthode.
+            - __toString : Nom réservé par PHP pour définir la représentation en chaîne d'un objet.
+
+            - $this->getFirstname() : Appelle la méthode getFirstname() pour obtenir le prénom.
+            - $this->getLastname() : Appelle la méthode getLastname() pour obtenir le nom de famille.
+            - <br/> : Balise HTML utilisée pour insérer un saut de ligne.
+            - $this->getAddress() : Appelle la méthode pour obtenir l'adresse.
+            - $this->getPostal() : Appelle la méthode pour obtenir le code postal.
+            - $this->getCity() : Appelle la méthode pour obtenir la ville.
+            - $this->getCountry() : Appelle la méthode pour obtenir le pays.
+        */
+
     //! ** id ** !//
     //* Retourne l’ID unique de l’adresse.
     public function getId(): ?int
@@ -264,6 +290,10 @@ class Address
         - Toutes les propriétés sont definies avec des annotations Doctrine pour les mapper à des colonnes specifiques
         - Les champs sont typés (string, int, etc.) pour les variations de pays (phone, country, postale)
 
+    * Methodes
+        - __toString() :
+            La méthode __toString() améliore l'expérience de manipulation des objets en PHP en permettant une conversion implicite en chaîne de caractères. Dans cet exemple, elle crée une représentation formatée et lisible d'une adresse pour un affichage dans une page web ou une réponse HTTP.
+            
     * Getters et Setters
         - Getters et Setters simple pour les propriétés
 */

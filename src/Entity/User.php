@@ -1,4 +1,5 @@
 <?php
+//? Ce fichier définit les propriétés essentielles d'un utilisateur, gère ses relations avec d'autres entités (comme Address et Order) et implémente des interfaces Symfony pour la gestion des utilisateurs et de leur authentification.
 // ? https://symfony.com/doc/current/security.html#the-user
     //! Création de la class User qui sera l'entité User en BDD
     // ! symfony console make:user
@@ -185,6 +186,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'user')]
     private Collection $addresses;
+
+    /**
+     * @var Collection<int, Order>
+     */
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'user')]
+    private Collection $orders;
         /*
             - @var Collection<int, Address> : Indique que cette propriété est une collection d’objets Address.
             - #[ORM\OneToMany] : Annotation Doctrine qui définit une relation OneToMany entre l’utilisateur et ses adresses.
@@ -193,15 +200,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             - private Collection $addresses; : La propriété $addresses est de type Collection et stocke toutes les adresses liées à cet utilisateur.
         */
 
+    //! ** methodes ** !//
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
         /*
             - __construct() : Initialisation de la collection $addresses en tant qu’instance de ArrayCollection.
             - $this->addresses = new ArrayCollection(); : Crée une collection vide pour stocker les adresses. ArrayCollection est une implémentation de Collection fournie par Doctrine, optimisée pour gérer des ensembles d’entités.
         */
 
+    public function __tostring()
+    {
+        return $this->getFirstname().' '.$this->getLastname();
+    }
     /*
     ************************************************************
     !                        ID                                *
@@ -461,11 +474,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /*
-    ************************************************************
-    !                        addresses                         *
-    ************************************************************
-    */
+/*
+************************************************************
+!                  RELATION avec addresses                 *
+************************************************************
+*/
     //* -> Methode pour retourner la collection d'adresses assoscié à l'User
     /**
      * @return Collection<int, Address>
@@ -518,5 +531,89 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             - $address->setUser(null); : Supprime l’association de l’utilisateur dans l’entité Address pour désynchroniser les deux côtés de la relation.
             - return $this; : Retourne l’instance actuelle pour permettre le chaînage de méthodes.
         */
-}
 
+
+/*
+************************************************************
+!                  RELATION avec Order                 *
+************************************************************
+*/
+        /**
+         * @return Collection<int, Order>
+         */
+        public function getOrders(): Collection
+        {
+            return $this->orders;
+        }
+
+        public function addOrder(Order $order): static
+        {
+            if (!$this->orders->contains($order)) {
+                $this->orders->add($order);
+                $order->setUser($this);
+            }
+
+            return $this;
+        }
+
+        public function removeOrder(Order $order): static
+        {
+            if ($this->orders->removeElement($order)) {
+                // set the owning side to null (unless already changed)
+                if ($order->getUser() === $this) {
+                    $order->setUser(null);
+                }
+            }
+
+            return $this;
+        }
+}
+/*
+!Explications :
+*1. Structure globale
+    La classe User est une entité Doctrine qui implémente les interfaces UserInterface et PasswordAuthenticatedUserInterface. Elle est conçue pour :
+        - Représenter un utilisateur dans la base de données.
+        - Interagir avec le système de sécurité Symfony.
+
+* 2. Mappage avec Doctrine
+    - Annotations Doctrine (#[ORM\...]) :
+        - #[ORM\Entity] : Indique que cette classe est une entité Doctrine mappée à une table dans la base de données.
+        - #[ORM\Table(name: 'user')] : Définit explicitement le nom de la table comme user, tout en évitant les conflits avec des mots réservés SQL grâce aux backticks.
+        - #[ORM\Column] : Mappe une propriété PHP à une colonne dans la base de données.
+    - Contrainte d'unicité :
+        - #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])] : Garantit qu'un email est unique dans la table user.
+
+* 3. Propriétés et méthodes
+    - Propriétés principales :
+        -id : Identifiant unique de l'utilisateur.
+            - Généré automatiquement.
+        - email : Email de l'utilisateur.
+            - Doit être unique dans la base de données.
+        - roles : Tableau de rôles associés à l'utilisateur.
+            - Par défaut, contient ROLE_USER.
+        - password : Mot de passe haché de l'utilisateur.
+        - firstname et lastname : Prénom et nom de l'utilisateur.
+
+    - Relations Doctrine :
+        - addresses : Relation OneToMany entre un utilisateur et ses adresses.
+            - Gérée avec une collection (ArrayCollection) pour contenir plusieurs entités Address.
+        - orders : Relation OneToMany entre un utilisateur et ses commandes (Order).
+
+    - Méthodes importantes :
+        - getUserIdentifier : Retourne l'email comme identifiant unique.
+        - getRoles : Ajoute automatiquement ROLE_USER au tableau de rôles avant de le retourner.
+        - setPassword : Définit le mot de passe haché.
+        - eraseCredentials : Méthode de sécurité pour supprimer des données sensibles temporaires.
+
+        - Relations (addresses et orders) :
+            - addAddress / addOrder : Ajoute une adresse ou une commande à l'utilisateur.
+            - removeAddress / removeOrder : Retire une adresse ou une commande de l'utilisateur.
+
+*4. Utilisation avec Symfony Security
+    Grâce aux interfaces UserInterface et PasswordAuthenticatedUserInterface, la classe User est compatible avec le système de sécurité Symfony :
+
+    - Authentification :
+        - L'email est utilisé comme identifiant (getUserIdentifier).
+        - Le mot de passe est haché via PasswordAuthenticatedUserInterface.
+    - Rôles : Gérés via la méthode getRoles.
+*/

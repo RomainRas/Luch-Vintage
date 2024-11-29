@@ -1,4 +1,7 @@
 <?php
+//? Order : représente une commande dans le système. Elle est mappée à une table de base de données nommée order et contient des informations telles que la date de création, l'état de la commande, les détails du transporteur et les informations de livraison.
+
+
 /*
 ************************************************************
 !           NAMESSPACE ET IMPORT DE CLASSES                *
@@ -82,6 +85,12 @@ class Order
             - #[ORM\Column] : Définit une colonne entière pour stocker l'état de la commande.
             - private ?int $state = null; : Propriété de type int ou null. Peut être utilisée pour indiquer des états tels que "en attente", "payée", "expédiée", etc.
         */
+        /*
+            - 1 = En attente de paiement
+            - 2 = Paiement validé
+            - 3 = Expedié
+            - 4 = Livré
+        */
 
     //! ** carrierName ** !//
     //* Nom du transporteur choisi pour cette commande.
@@ -110,12 +119,35 @@ class Order
     /**
      * @var Collection<int, OrderDetails>
      */
-    #[ORM\OneToMany(targetEntity: OrderDetails::class, mappedBy: 'myOrder')]
+    #[ORM\OneToMany(targetEntity: OrderDetails::class, mappedBy: 'myOrder', cascade:['persist'])]
     private Collection $orderDetails;
         /*
-            - #[ORM\OneToMany(...)] : Définit une relation OneToMany avec l'entité OrderDetails.
-            - mappedBy: 'myOrder' : Spécifie que cette relation est définie du côté myOrder dans l'entité OrderDetails.
-            - private Collection $orderDetails; : Utilise une collection pour gérer les multiples OrderDetails liés à une commande.
+            - #[ORM\OneToMany(...)] : Indique une relation de type OneToMany. Cela signifie qu'une commande (Order) peut être liée à plusieurs détails de commande (OrderDetails).
+            - targetEntity: OrderDetails::class : Spécifie l'entité liée à cette relation, ici OrderDetails.
+            - mappedBy: 'myOrder' : Définit le côté propriétaire de la relation. La propriété myOrder dans l'entité OrderDetails est utilisée pour établir la relation bidirectionnelle.
+            - cascade: ['persist'] : Active la propagation des opérations sur les entités associées. Ici, lorsque vous appelez persist() sur une commande (Order), les objets associés OrderDetails seront également persistés automatiquement.
+
+            - private Collection $orderDetails : Utilise une collection (généralement ArrayCollection de Doctrine) pour stocker les multiples objets OrderDetails liés à une commande.
+        */
+
+    //! ** relation avec User ** !//
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+        /*
+            - #[ORM\ManyToOne(...)] : Indique une relation de type ManyToOne. Cela signifie que plusieurs commandes (Order) peuvent être associées à un seul utilisateur (User).
+            - inversedBy: 'orders' :
+                - Définit le côté inverse de la relation dans l'entité User.
+                - La propriété orders dans l'entité User stocke les commandes associées à cet utilisateur.
+        */
+    #[ORM\JoinColumn(nullable: false)]
+
+        /*
+            - #[ORM\JoinColumn(nullable: false)] :
+                - Spécifie la colonne de jointure (clé étrangère) dans la base de données.
+                - nullable: false : Rend cette relation obligatoire. Une commande doit être liée à un utilisateur.
+        */
+    private ?User $user = null;
+        /*
+            -private ?User $user = null : Une commande peut être liée à un utilisateur (relation obligatoire).
         */
 
 /*
@@ -129,6 +161,39 @@ class Order
     public function __construct()
     {
         $this->orderDetails = new ArrayCollection();
+    }
+
+    //! ** getTotalWt ** !//
+    //* Methode pour avoir le prix total avec taxe
+
+    public function getTotalWt()
+    {
+        $totalWt = 0;
+        $products = $this->getOrderDetails();
+
+        foreach ($products as $product) {
+            // dd($product);
+            $coeff = 1 + ($product->getProductTva() / 100);
+            // dd($product->getProductPrice() * $coeff);
+            $totalWt += ($product->getProductPrice() * $coeff) * $product->getProductQuantity();
+        }
+        return $totalWt + $this->getCarrierPrice();
+    }
+
+    //! ** getTotalTva ** !//
+    //* Methode pour avoir le montant de TVA
+    public function getTotalTva()
+    {
+        $totalTva = 0;
+        $products = $this->getOrderDetails();
+
+        foreach ($products as $product) {
+            // dd($product);
+            $coeff = $product->getProductTva() / 100;
+            // dd($product->getProductPrice() * $coeff);
+            $totalTva += $product->getProductPrice() * $coeff;
+        }
+        return $totalTva;
     }
 
     //! ** id ! **!//
@@ -237,6 +302,7 @@ class Order
     //* removeOrderDetail() :
         //* Supprime un détail de la commande.
         //* Dissocie le détail en mettant setMyOrder() à null.
+            // Cette méthode permet de supprimer un OrderDetails (détail de commande) de la collection orderDetails associée à l'instance actuelle de Order.
     public function removeOrderDetail(OrderDetails $orderDetail): static
     {
         if ($this->orderDetails->removeElement($orderDetail)) {
@@ -248,6 +314,51 @@ class Order
 
         return $this;
     }
+        /*
+            - OrderDetails $orderDetail : Le détail de commande à supprimer.
+
+            - $this->orderDetails->removeElement($orderDetail) :
+                - Supprime l'objet $orderDetail de la collection orderDetails (s'il est présent).
+                - Retourne true si l'objet a été supprimé, sinon false.
+
+        - Vérification et nettoyage de la relation :
+            - Si $orderDetail est bien supprimé de la collection et que la commande (myOrder) associée à ce détail est la commande actuelle ($this), alors la relation côté propriétaire (myOrder) dans l'entité OrderDetails est mise à null en appelant :
+            - $orderDetail->setMyOrder(null);
+            - Cela garantit que la relation est totalement supprimée des deux côtés (relation bidirectionnelle).
+        */
+
+    //! ** getUser ** !//
+    //* Récupère l'utilisateur (User) associé à l'instance actuelle de Order.
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+        /*
+            - Retour :
+                - Retourne une instance de User si elle est définie, sinon retourne null.
+            - Type de retour :
+                - ?User : Le point d'interrogation (?) indique que le retour peut être soit une instance de User, soit null.
+        */
+
+    //! ** setUser ** !// 
+    //* Définit l'utilisateur (User) associé à la commande actuelle.
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+        /*
+            - Paramètre :
+                - ?User $user :
+                    - Une instance de l'entité User ou null.
+                    - Cela permet de lier une commande à un utilisateur spécifique ou de supprimer cette liaison en passant null.
+            - Fonctionnement :
+                - L'attribut $this->user est mis à jour avec la valeur de $user.
+            - Retour :
+                - : static :
+                - Retourne l'instance actuelle de Order, permettant une approche fluide.
+        */
 }
 /*
 !Résumé
@@ -268,4 +379,18 @@ class Order
             - Méthodes pour gérer la relation avec orderDetails.
 
             Cette entité est prête à être utilisée avec Doctrine pour gérer les commandes dans une base de données.
+
+    - cascade: ['persist'] ?
+        Cela évite d'avoir à appeler explicitement persist() sur chaque objet OrderDetails lors de la création ou de la modification d'une commande.
+        Très utile pour simplifier le code lorsque vous ajoutez plusieurs OrderDetails à une Order.
+
+    * Relation entre Order et OrderDetails :
+
+        -Une commande peut contenir plusieurs détails de commande (relation OneToMany).
+        La méthode removeOrderDetail() permet de gérer cette relation en supprimant un détail de commande de la collection.
+
+    *Relation entre Order et User :
+
+        Une commande est toujours associée à un utilisateur unique (relation ManyToOne).
+        Les méthodes getUser() et setUser() permettent de lire ou de modifier cette relation.
 */

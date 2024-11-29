@@ -1,5 +1,5 @@
 <?php
-//! Controller qui va gérer le changement de pwd de l'user
+//? Formulaire qui va gérer le changement de pwd de l'user
     //! symfony console make:form
         //! Nom du controller : PasswordUserType
             //! Nom de l'entité lié : User 

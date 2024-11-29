@@ -22,8 +22,9 @@ use App\Entity\Carrier;
 use App\Entity\User;
 use App\Entity\Product;
 use App\Entity\Category;
-    /*
-        - App\Entity\User, Product, Category : Ces classes d’entités représentent des tables en base de données pour User, Product, et Category.
+use App\Entity\Order;
+/*
+        - App\Entity\Carrier, User, Product, Category, Order : Ces classes d’entités représentent des tables en base de données pour Carrier, User, Product, Category et Order
     */
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -173,6 +174,12 @@ class DashboardController extends AbstractDashboardController
                         - 'Transporteurs' : Texte affiché dans le menu, ce sera visible dans l'interface d'administration
                         - 'fas fa-list' : Nom de l'icone a afficher a coté du texte dans le menu. c'est une class CSS de FontAwesome (ici une icone de liste)
                         - Carrier::class : Spécifie l'entité ou le contrôleur CRUD associé. Ici, Carrier::class pointe vers l'entité Carrier, qui doit être gérée par un contrôleur CRUD. Symfony utilise ce nom pour lier l'élément de menu au contrôleur CRUD correspondant.
+            */
+        yield MenuItem::linkToCrud('Commandes', 'fas fa-list', Order::class);
+            /*
+                - Parametres :
+                    - ' Commande ' : Text affiché dans le menu, visible dans l'interface d'administration
+                    - Order::class : Specifie l'entité ou le controleur CRUD associé. Ici il point vers l'entité Order pour qui symfony et easyadmin gere par un CRUD controller (OrderCrudController.php)
             */
 
     }

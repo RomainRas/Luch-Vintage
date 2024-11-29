@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+    {# {% extends ... %} : Instruction Twig pour indiquer que ce template étend un autre template. 
+    Ici, il hérite du fichier 'base.html.twig', qui est le template principal. Cela signifie que ce template va réutiliser la structure définie dans 'base.html.twig'. #}
+
+{% block body %}
+    {# {% block body %} : Déclare un bloc de contenu appelé 'body'. 
+    Ce bloc est défini dans le template parent (base.html.twig) et permet d'insérer du contenu personnalisé. #}
+    
+    <div class="container my-5">
+        <h1>Récapitulatif de ma commande</h1>
+        
+        <div class="row">
+            
+            <div class="col md-8">
+                
+                    <div class="bg-light p-3 my-3">
+                        <strong>Contenu de mon panier</strong><br>
+                        {% for product in cart %}
+                        <div class="row mt-2">
+                            <div class="col-md-2">
+                                <img src="/uploads/{{ product.objet.illustration}}" class="img-fluid" alt="{{ product.objet.name }}">
+                            </div>
+                            <div class="col-md-6">
+                                <strong>{{ product.objet.name }}</strong>
+                                <span class="d-block small">Prix Unitaire : {{ product.objet.pricewt|price }}</span>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <span class="badge text-bg-secondary">x {{ product.qty }}</span>
+                            </div>
+                            <div class="col-md-2 text-right">
+                            <strong>{{ (product.qty * product.objet.pricewt)|price }}</strong>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="bg-light p-3 my-3">
+                        <strong>Votre Adresse de livraison :</strong><br>
+                        {{choices.addresses.firstname}} {{choices.addresses.lastname}} <br>
+                        {{choices.addresses.address}} <br>
+                        {{choices.addresses.city}} - {{choices.addresses.country}}
+                    </div>
+
+                    <div class="bg-light p-3">
+                        <strong>Votre transporteur :</strong><br>
+                        {{choices.carriers.name}} <br>
+                        {{choices.carriers.text}} <br>
+                    </div>
+
+            </div>
+
+            <div class="col md-4">
+                <div class="bg-light p-3">
+                    <div class="flex justify-content-between">
+                        <span class="fw-bold">Nombre d'articles :</span>
+                        <span>{{ fullCartQuantity }}</span> </br>
+                    </div>
+                    <div class="flex justify-content-between mt-3">
+                        <span class="fw-bold">Total Prix Articles T.T.C :</span>
+                        <span>{{ totalWt|price }} </span> <br>
+                    </div>
+                    <div class="flex justify-content-between mt-3">
+                        <span class="fw-bold">Total Transporteur :</span>
+                        <span>{{choices.carriers.price|price}}</span> <br>
+                    </div>
+                    <div class="flex justify-content-between mt-3">
+                        <span class="fw-bold">Total Commande</span>
+                        <span>{{ (totalWt + choices.carriers.price)|price }}</span>
+                    </div>
+                    <div>
+                        <a href="" class="btn btn-success w-100 mt-3">Payer</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+    {# {% endblock %} : Fin du bloc 'body'. Tout le contenu entre {% block body %} et {% endblock %} sera inséré dans le bloc correspondant du template parent 'base.html.twig'. #}
