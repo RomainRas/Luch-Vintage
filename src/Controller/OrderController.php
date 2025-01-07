@@ -269,10 +269,34 @@ class OrderController extends AbstractController
         return $this->render('order/summary.html.twig', [
             'choices' => $form->getData(),
             'cart' => $products,
+            'order' => $order,
             'totalWt' => $cart->getTotalWt()
         ]);
             /*
-                - Vue order/summary.html.twig : Affiche les choix de l'utilisateur, le contenu du panier et le total TTC (totalWt).
+                - return $this->render('order/summary.html.twig', [...])
+                    - return : Mot-clé PHP utilisé pour renvoyer une valeur (ici, une réponse HTTP générée par Symfony) à la fin d'une méthode.
+                    - $this->render() : Méthode héritée de la classe AbstractController, utilisée pour :
+                    - 'order/summary.html.twig' :Chemin vers la template Twig que Symfony doit afficher. Ce fichier est situé dans le dossier templates/order/summary.html.twig.            
+                
+                //* Les variables passées à Twig sous forme de tableau associatif :
+                    - Chaque clé du tableau correspond à une variable disponible dans le fichier Twig :
+                        - 'choices' => $form->getData()
+                            - 'choices' : Variable Twig contenant les choix d'adresse et de transporteur sélectionnés par l'utilisateur.
+                            - $form->getData() : Méthode de l'objet Form qui retourne les données soumises par le formulaire.
+                            Ces données incluent l'adresse choisie et le transporteur sélectionné.
+                        - 'cart' => $products
+                            - 'cart' : Variable Twig contenant les produits du panier.
+                            - $products : Variable locale qui contient le contenu du panier.
+                                - Provient de l’appel à la méthode $cart->getCart().
+                            Le panier est un tableau associatif composé des produits ajoutés et de leurs quantités.
+                        - 'order' => $order
+                            - 'order' : Variable Twig contenant les informations de la commande.
+                            - $order : Instance de l'entité Order, créée lors de la soumission du formulaire.
+                                Contient toutes les informations sur la commande, telles que :
+                                    -L'utilisateur, adresse de livraison, le transporteur, le montant total.
+                        - 'totalWt' => $cart->getTotalWt()
+                            - 'totalWt' : Variable Twig contenant le total TTC du panier.
+                            - $cart->getTotalWt() : Méthode de l'objet Cart qui calcule le montant total du panier TTC (toutes taxes comprises).
             */
     }
 }
@@ -287,6 +311,10 @@ class OrderController extends AbstractController
     - Crée une commande et ses détails associés.
     - Insère les données en base.
     - Prépare la vue pour le récapitulatif de la commande.
+        - Récupère les données du formulaire de commande (adresse et transporteur).
+        - Récupère le contenu du panier et le montant total TTC.
+        - Passe ces informations à la vue Twig order/summary.html.twig.
+        - La vue Twig utilise ces variables pour afficher un récapitulatif de la commande.
 
     * Fonctionnalités clés :
     - Validation stricte (utilisateur connecté, méthode HTTP correcte).

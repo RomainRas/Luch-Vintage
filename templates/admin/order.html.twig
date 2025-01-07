@@ -8,7 +8,8 @@
     <br>
     <br>
     {# https://twig.symfony.com/doc/3.x/filters/date.html #}
-    <span>Passé le {{ order.createdAt|date('d/m/y') }}</span>
+    <span>Passé le {{ order.createdAt|date('d/m/y') }}</span><br>
+    <span>Stripe session id : {{ order.StripeSessionId }}</span>
 
     <div class="row my-4">
         <div class="col-md-6">

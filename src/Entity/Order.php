@@ -150,6 +150,23 @@ class Order
             -private ?User $user = null : Une commande peut être liée à un utilisateur (relation obligatoire).
         */
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+        /*
+            #[ORM\Column(...)] : Cette ligne utilise un attribut PHP pour indiquer que la propriété $stripe_session_id sera mappée à une colonne dans la base de données.
+                - type: Types::TEXT Définit le type de la colonne dans la base de données.
+                    - Types::TEXT signifie que cette colonne stockera une grande quantité de texte (idéal pour des identifiants de session comme ceux de Stripe).
+                    - nullable: true :Indique que cette colonne peut être null (vide) dans la base de données.
+        */
+    private ?string $stripe_session_id = null;
+        /*
+            - private : Définit la visibilité de la propriété.
+                - private : signifie que la propriété est accessible uniquement depuis l’intérieur de la classe.
+            - ?string : Indique que la propriété peut être de type string (chaîne de caractères) ou null.
+            - $stripe_session_id :Nom de la propriété.
+                - Cette propriété stockera l'identifiant de session Stripe lié à une commande.
+                - = null : La valeur initiale de la propriété est définie à null, car elle n'est pas encore définie au moment de la création de l'objet.
+        */
+
 /*
 ************************************************************
 !                      METHODES                            *
@@ -359,6 +376,66 @@ class Order
                 - : static :
                 - Retourne l'instance actuelle de Order, permettant une approche fluide.
         */
+
+        public function getStripeSessionId(): ?string
+        {            
+            /*
+                - public :
+                    - Le mot-clé public signifie que la méthode est accessible depuis n'importe où, en dehors de la classe.
+                    - Cela permet de lire la valeur de la propriété $stripe_session_id à partir d'autres classes, comme dans un contrôleur.
+                - function :
+                    - Mot-clé utilisé pour déclarer une fonction ou méthode.
+                - getStripeSessionId :
+                    - Nom de la méthode.
+                    - Par convention, les méthodes qui récupèrent une valeur commencent par get.
+                - (): ?string :
+                    - : indique le type de valeur que la méthode retourne.
+            */
+            return $this->stripe_session_id;
+                /*
+                    - return :
+                        - Mot-clé qui renvoie une valeur à l'endroit où la méthode est appelée.
+                    - $this->stripe_session_id :
+                        - $this fait référence à l'instance actuelle de la classe.
+                    - ->stripe_session_id accède à la propriété $stripe_session_id de cette instance.
+                        - Cette ligne retourne donc la valeur de la propriété $stripe_session_id.
+                */
+        }
+
+
+        public function setStripeSessionId(?string $stripe_session_id): static
+        {
+            /*
+                - public :
+                    - La méthode est accessible depuis n'importe où.
+                - function :
+                    - Déclare une méthode.
+                - setStripeSessionId :
+                    - Nom de la méthode.
+                    - Par convention, les méthodes qui modifient une valeur commencent par set.
+                - (?string $stripe_session_id) :
+                    - ?string indique que le paramètre $stripe_session_id doit être soit une chaîne de caractères, soit null.
+                    - $stripe_session_id est le paramètre passé à la méthode, correspondant à la valeur que tu veux attribuer à la propriété $stripe_session_id.
+                - : static :
+                    - La méthode retourne l'instance actuelle de la classe.
+                    - Cela permet de chaîner les appels de méthodes (par exemple, setStripeSessionId()->setOtherProperty()).
+            */
+            $this->stripe_session_id = $stripe_session_id;
+                /*
+                    - $this->stripe_session_id :
+                        - Accède à la propriété $stripe_session_id de l'instance actuelle.
+                    = $stripe_session_id :
+                        - Assigne la valeur du paramètre $stripe_session_id à la propriété $stripe_session_id.
+                */
+            return $this;
+                /*
+                    - return :
+                        - La méthode retourne une valeur.
+                    -$this :
+                        - Retourne l'instance actuelle de la classe.
+                        - Cela permet de chaîner les appels de méthodes, une pratique courante en programmation orientée objet.
+                */
+        }
 }
 /*
 !Résumé
@@ -393,4 +470,8 @@ class Order
 
         Une commande est toujours associée à un utilisateur unique (relation ManyToOne).
         Les méthodes getUser() et setUser() permettent de lire ou de modifier cette relation.
+
+    *Methodes avec Stripe
+        - getStripeSessionId() : Récupère la valeur de la propriété $stripe_session_id.
+        - setStripeSessionId() : Modifie la valeur de la propriété $stripe_session_id et retourne l'instance actuelle.
 */

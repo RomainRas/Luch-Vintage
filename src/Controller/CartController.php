@@ -46,20 +46,38 @@ class CartController extends AbstractController
 ************************************************************
 */
     //* -> Route pour afficher le panier
-    #[Route('/mon-panier', name: 'app_cart')]
+    #[Route('/mon-panier/{motif}', name: 'app_cart', defaults: [ 'motif' => null ])]
         /*
             - [Route('/mon-panier', name: 'app_cart')] : Attribut PHP pour définir une route.
             - /mon-panier : Chemin de l’URL pour accéder à cette méthode (page du panier).
             - name: 'app_cart' : Nom unique de la route, permettant de la référencer ailleurs dans l’application.
+            - {motif} : Paramètre optionnel pour identifier le motif de l'affichage (par exemple, en cas d'annulation d'un paiement).
+            - defaults: [ 'motif' => null ]Définit une valeur par défaut pour le paramètre {motif}. Si aucune valeur n’est passée dans l’URL, le paramètre sera null.
         */
-    //! ** Méthode pour afficher le panier de l’utilisateur  ** !//
-    public function index(cart $cart): Response
+    //! ** Méthode pour afficher le panier de l’utilisateur  et gere le cas d'annulation d'en paiement** !//
+    public function index(cart $cart, $motif): Response
         /*
             - public function index(Cart $cart): Response : Méthode publique pour afficher le contenu du panier.
             - Cart $cart : Paramètre injecté représentant le service Cart.
             - : Response : Spécifie que cette méthode retourne un objet Response.
         */
     {
+        //* Gestion de l'annulation d'un paiement
+        if ($motif == "annulation") {
+            $this->addFlash(
+                'info',
+                'Paiement annulé : Vous pouvez mettre à jour votre panier et votre commande.'
+            );
+        }
+            /*
+                - if ($motif == "annulation") : Vérifie si le motif passé à la méthode est "annulation".
+                - $this->addFlash('info', '...') : Ajoute un message flash de type "info" à la session.
+                    Ce message sera affiché sur la page suivante, informant l'utilisateur que le paiement a été annulé.
+                - Flash Messages :
+                    Les flash messages sont des messages temporaires qui disparaissent après avoir été affichés.
+                    Utilisés pour fournir un retour rapide à l'utilisateur (par exemple, confirmation ou erreur).
+            */
+
         return $this->render('cart/index.html.twig', [
             'cart' => $cart->getCart(), //* -> Récupère le contenu du panier
             'totalWt' => $cart->getTotalWt() //* -> Calcule le total du panier
@@ -199,6 +217,10 @@ class CartController extends AbstractController
     - remove() :
         - Vide complètement le panier.
         - Redirige vers la page d'accueil.
+
+    - Gestion du motif	Vérifie si le paiement a été annulé et affiche un message flash.
+    - Récupération du panier	Utilise le service Cart pour récupérer le contenu du panier et le total TTC.
+    - Affichage de la vue	Retourne la vue Twig avec les données du panier.
     
 * Messages Flash :
     - addFlash() : Ajoute un message de confirmation pour informer l'utilisateur du succès des opérations d’ajout ou de suppression, qui sera affiché lors de la redirection.

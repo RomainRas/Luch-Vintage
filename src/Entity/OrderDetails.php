@@ -184,6 +184,14 @@ class OrderDetails
 
     //! ** Getteur et Setteur de productPrice ** !//
     //* Retourne le prix unitaire du produit.
+    public function getProductPriceWt()
+    {
+        $coeff = 1 + ($this->productTva/100);
+        return $coeff * $this->productPrice;
+    }
+
+    //! ** Getteur et Setteur de productPrice ** !//
+    //* Retourne le prix unitaire du produit.
     public function getProductPrice(): ?float
     {
         return $this->productPrice;
