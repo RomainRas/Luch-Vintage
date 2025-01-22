@@ -1,51 +1,49 @@
 <?php
+//! contrôleur CRUD pour gérer l'entité Order (commandes) dans l'interface d'administration avec EasyAdmin. Il inclut des personnalisations pour les actions, les champs, et l'affichage des commandes
 /*
 ************************************************************
 !           NAMESSPACE ET IMPORT DE CLASSES                *
 ************************************************************
 */
 namespace App\Controller\Admin;
-    /*
-        - namespace App\Controller\Admin : Définit le namespace, indiquant que ce fichier fait partie du dossier Admin.
-    */
+
+use App\Classe\Mail;
+use App\Classe\State;
 use App\Entity\Order;
-    /*
-        - use App\Entity\Order; : Importation de l'entité Order pour gérer les données des commandes.
-    */
-
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-    /*
-        - use EasyCorp\Bundle\EasyAdminBundle\Config\Action; : Classe pour configurer des actions dans le CRUD.
-    */
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-    /*
-        - use EasyCorp\Bundle\EasyAdminBundle\Config\Crud; : Classe pour configurer le CRUD (libellés, templates).
-    */
-
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-    /*
-        - use EasyCorp\Bundle\EasyAdminBundle\Config\Actions; : Classe pour configurer les actions dans les différentes pages (index, détail...).
-    */
-
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
     /*
-    - use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController; : Contrôleur de base pour le CRUD.
-    */
+        App\Classe\Mail :
+            - Classe pour envoyer des emails. Utilisée ici pour notifier les utilisateurs des changements de statut d'une commande.
 
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-/*
-    - use EasyCorp\Bundle\EasyAdminBundle\Field :
-        - IdField : Champ pour afficher un ID.
-        - TextField : Champ pour afficher ou modifier du texte.
-        - DateField : Champ pour gérer les dates.
-        - NumberField : Champ pour afficher des nombres.
-        - AssociationField : Champ pour gérer les relations entre entités.
-*/
+        App\Classe\State :
+            - Contient les différents statuts de commande. Par exemple, "En cours de préparation", "Expédiée", etc.
+        App\Entity\Order :
+            - Entité Order, qui représente les commandes dans la base de données. Ce CRUD gère cette entité.
+
+        Doctrine\ORM\EntityManagerInterface :
+            - Interface pour interagir avec la base de données (création, mise à jour, suppression).
+
+        Symfony\Component\HttpFoundation\Request :
+            - Classe pour accéder aux données de la requête HTTP (comme les paramètres state pour changer le statut d'une commande).
+
+        EasyAdmin :
+            - Les classes d'EasyAdmin permettent de configurer les champs, les actions, et les comportements de l'interface d'administration :
+                - Crud : Configure l'apparence et le comportement des pages CRUD.
+                - Action : Définit des actions comme "Afficher", "Modifier", etc.
+                - IdField, TextField, DateField, etc.` : Types de champs utilisés pour afficher les données.
+    */
 
 
 /*
@@ -55,7 +53,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 */
 //* Classe contrôleur pour gérer l'interface d'administration des commandes (Order).
 class OrderCrudController extends AbstractCrudController
-    /*
+    /*  
+        - OrderCrudController : Nom de la classe, qui gère le CRUD (Create, Read, Update, Delete) pour l'entité Order.
         - Hérite de AbstractCrudController : Fournit les fonctionnalités de base pour les opérations CRUD.
     */
 
@@ -65,12 +64,33 @@ class OrderCrudController extends AbstractCrudController
 ************************************************************
 */
 {   
+    private $em;
+        /*
+            $em : 
+                - Représente l'EntityManager, utilisé pour interagir avec la base de données (par exemple, enregistrer ou mettre à jour une commande).
+        */
+    public function __construct(EntityManagerInterface $entityManagerInterface) 
+    {
+        $this->em = $entityManagerInterface;
+    }
+        /*
+            - __construct() : 
+                - Méthode spéciale appelée automatiquement lorsque la classe est instanciée.
+            - EntityManagerInterface $entityManagerInterface :
+                - Symfony injecte automatiquement l'EntityManager dans cette méthode.
+            - $this->em = $entityManagerInterface :
+                - Initialise la propriété $em avec l'EntityManager fourni.
+        */
     //! ** getEntityFqcn() ** !//
     //* Retourne le FQCN (Fully Qualified Class Name) de l'entité gérée par ce CRUD. Ici, il s'agit de App\Entity\Order.
     public static function getEntityFqcn(): string
     {
         return Order::class;
     }
+        /*
+            - getEntityFqcn() :
+                - Méthode obligatoire dans un contrôleur CRUD EasyAdmin. Elle retourne le FQCN (Fully Qualified Class Name) de l'entité gérée (Order ici).
+        */
 
     //! ** configureCrud() ** !//
     //* Configuration du CRUD
@@ -113,16 +133,74 @@ class OrderCrudController extends AbstractCrudController
                 - remove(Crud::PAGE_INDEX, Action::EDIT) : Supprime l'action "Modifier".
         */
 
+    //! ** changeState ** !//
+    //* Methode personnalisée liée au actions pour changer le statut d'une commande
+    public function changeState($order,$state)
+    {
+        // dd(State::STATE);
+        //* -> 1 Modification du statut de la commande
+        // dd($state);
+        $order->setState($state);
+        $this->em->flush();
+            /*
+                - $order->setState($state) : Change le statut de la commande.
+                - $this->em->flush() : Enregistre la modification dans la base de données.
+            */
+
+        //* -> 2 Affichage du Flash Message pour informer l'administrateur
+        $this->addFlash('success', "Statut de la commande correctement mis à jour.");
+
+        //* -> 3 Informer l'User par mail de la modification du statut de sa commande
+        // dd($order->getUser()->getEmail()); adresse email de l'User
+
+        $mail = new Mail();
+        $vars = [
+            'firstname' => $order->getUser()->getFirstname(),
+            'id_order' => $order->getId()
+        ];
+        $mail->send(
+            $order->getUser()->getEmail(),
+            $order->getUser()->getFirstname().' '.$order->getUser()->getLastname(),
+            State::STATE[$state]['email_subject'],
+            State::STATE[$state]['email_template'], 
+            $vars);
+        // dd($order->getUser()->getEmail());
+            /*
+                - new Mail() : Crée une instance de la classe Mail.
+                - $mail->send(...) : Envoie un email pour informer l'utilisateur du changement de statut.
+            */
+        
+    }
     //! ** Show ** !//
     //* Méthode personnalisée liée à l'action "Afficher" : Affiche les détails d'une commande.
-    public function show(AdminContext $adminContext)
-    {
+    public function show(AdminContext $adminContext, AdminUrlGenerator $adminUrlGenerator, Request $request)
+    {   
         $order = $adminContext->getEntity()->getInstance();
         // dd($order);
 
+        //* -> 1. Récuperer l'url de notre action "SHOW" ( recuperation de la commande)
+        $url = $adminUrlGenerator->setController(self::class)->setAction('show')->setEntityId($order->getId())->generateUrl();
+        // dd(vars: $url);
+            /*
+                $adminContext->getEntity()->getInstance() : Récupère l'entité actuellement sélectionnée.
+            */
+
+        //* -> 2. Traitement des changement de statut
+        // dd($request->get('state'));
+        if ($request->get('state')) {
+            $this->changeState($order,$request->get('state'));
+        }
+            /*
+                -Si un paramètre state est présent dans la requête, il est utilisé pour changer le statut via changeState().
+            */
+        //* -> 3. Affichage de la commande
         return $this->render('admin/order.html.twig', [
-                'order' => $order
+                'order' => $order,
+                'current_url' => $url
         ]);
+            /*
+                - $this->render('admin/order.html.twig', [...]) : Affiche la commande en utilisant le template Twig order.html.twig.
+            */
     }
         /*
             - AdminContext $adminContext : Permet d'accéder aux données du contexte administratif, y compris l'entité en cours.

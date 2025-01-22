@@ -17,12 +17,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
     /*
-        -IdField, TextField, TextEditorField, SlugField, ImageField, NumberField, ChoiceField, AssociationField : Champs disponibles dans EasyAdmin pour configurer les formulaires CRUD (identifiant, texte, éditeur de texte, slug, image, nombre, choix, association).
+        -IdField, TextField, TextEditorField, SlugField, ImageField, NumberField, ChoiceField, AssociationField, BooleanField : Champs disponibles dans EasyAdmin pour configurer les formulaires CRUD (identifiant, texte, éditeur de texte, slug, image, nombre, choix, association).
     */
 
 
@@ -86,6 +87,16 @@ class ProductCrudController extends AbstractCrudController
             TextField::new('name') // Crée un champ de type texte pour l’attribut name.
                 ->setLabel('Nom') // Définit le label du champ
                 ->setHelp("Nom de votre Produit"), // Message d’aide
+                
+            //* Champ pour ajouter un produit à la une sur la homepage
+            BooleanField::new('isHomepage') 
+                /*
+                    - BooleanField : Classe fournie par EasyAdmin pour gérer les valeurs booléennes (vrai ou faux). Case a cocher
+                    - Méthode new : Crée une nouvelle instance de BooleanField.
+                    - 'isHomepage' : Nom de la propriété de l'entité associée à ce champ. Cela correspond à un champ booléen (type boolean ou bool) dans la classe de l'entité.
+                */
+                ->setLabel('Produit à la une')
+                ->setHelp('Vous permet d\'afficher ce produit à la une'),
 
             //* Champ pour l’URL générée automatiquement.
             SlugField::new('slug') // Le champ slug est généré à partir de name.
@@ -101,7 +112,7 @@ class ProductCrudController extends AbstractCrudController
             //* Champ pour télécharger une image.
             ImageField::new('illustration')
                 ->setLabel('Image') // Définit le label pour l’image
-                ->setHelp("Image du produit 800x600") // Message d’aide pour la taille recommandée de l’image
+                ->setHelp("Image du produit 600x600") // Message d’aide pour la taille recommandée de l’image
                 ->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]') // Modèle de nom de fichier
                 ->setBasePath('/uploads') // Chemin public pour accéder aux images
                 ->setUploadDir('/public/uploads') // Répertoire de téléchargement dans le serveur
@@ -149,6 +160,9 @@ class ProductCrudController extends AbstractCrudController
 
     * ChoiceField : 
         - Configure un champ de choix pour la TVA, avec des valeurs prédéfinies pour une saisie rapide et uniforme.
+
+    * BooleanField :
+        - Configure un champ vrai ou faux ( a coche ) pour indiquer si le produit est en page d'acceuil (IsHomepage)
 
     * Ce contrôleur rend l'interface CRUD pour Product intuitive et adaptée aux besoins de gestion, tout en respectant les spécifications et les contraintes nécessaires pour chaque champ.
     */

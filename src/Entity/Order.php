@@ -87,9 +87,10 @@ class Order
         */
         /*
             - 1 = En attente de paiement
-            - 2 = Paiement validé
-            - 3 = Expedié
-            - 4 = Livré
+            - 2 = Payée
+            - 3 = En cours de préparation
+            - 4 = Expedié
+            - 5 = Annulée
         */
 
     //! ** carrierName ** !//

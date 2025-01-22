@@ -104,6 +104,9 @@ class Product
     //* -> Relation ManyToOne entre `Product` et `Category`, chaque produit étant associé à une seule catégorie.
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $category = null;
+
+    #[ORM\Column(nullable: true)]
+    public ?bool $isHomepage = null;
         /*
             - #[ORM\ManyToOne(...)] : Définit une relation ManyToOne avec l’entité Category.
             - inversedBy: 'products' : Indique que la relation inverse est définie par la propriété products dans l’entité Category.
@@ -284,6 +287,18 @@ class Product
         /*
             - setCategory() : Définit la catégorie à laquelle appartient le produit.
         */
+
+        public function isHomepage(): ?bool
+        {
+            return $this->isHomepage;
+        }
+
+        public function setHomepage(?bool $isHomepage): static
+        {
+            $this->isHomepage = $isHomepage;
+
+            return $this;
+        }
 }
 /*
 !Explications supplémentaires :

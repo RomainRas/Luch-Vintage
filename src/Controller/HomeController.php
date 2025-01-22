@@ -16,9 +16,12 @@ namespace App\Controller;
         - namespace : Définit l'espace de noms où cette classe est organisée. 
             - App\Controller\ : indique que ce fichier appartient au dossier Controller dans le répertoire src(app).
     */
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use App\Repository\HeaderRepository;
+use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     /*
         - namespace : Mot clé php pour definir l'espace de nommage App\Controller qui est l'espace de nommage pour eviterr les conflits de nom
         - App\Controller : c'est le dossier Controller dans l'appplication. la class HommeController fait partie du namespace HomeController 
@@ -56,7 +59,7 @@ class HomeController extends AbstractController
             - name: 'app_home' : Donne un nom à la route. il permet de référencer la route dans le code ( pour créer les liens entre les pages)
         */
     //! ** Déclaration de la méthode `index` qui gère la page d'accueil. ** !//
-    public function index(): Response
+    public function index(HeaderRepository $headerRepository, ProductRepository $productRepository): Response
         /* 
             - public : methode qui peut etre appelée depuis l'exterieur de la class
             - function : mot clé pour déclarer la methode
@@ -64,7 +67,11 @@ class HomeController extends AbstractController
             - (): Responde : indique que la methode retourne un objet de type Responde = reponse HTTP envoyée au navigateur
         */
     {
-        return $this->render('home/index.html.twig',[]);
+
+        return $this->render('home/index.html.twig',[
+            'headers' => $headerRepository->findAll(),
+            'productsInHomepage' => $productRepository->findByIsHomepage(true)
+        ]);
             /*
                 - return : mot clé php pour retourner une valeur depuis la methode
                 - $this->render() : utilise la methode render qui fait partie de la class AbstractController pour afficher une vue (template)

@@ -11,6 +11,7 @@
 ************************************************************
 */
 namespace App\Controller;
+use App\Classe\Mail;
 use App\Form\RegisterUserType;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
         - `use` : Mot-clé qui permet d'importer une classe externe dans le fichier courant.
         - `RegisterUserType` : C'est le type de formulaire créé avec Symfony pour gérer l'inscription des utilisateurs. On l'a créé avec la console Symfony.
 use App\Entity\User;
+use App\Classe\Mail;
         - `User` : Cette classe représente l'entité `User`, qui est liée à la table `user` dans la base de données.
             - On utilisera cette entité pour manipuler les données de l'utilisateur dans la base.
         - `EntityManagerInterface` : Interface fournie par Doctrine, qui permet de gérer les entités dans la base de données (insertion, mise à jour, suppression).
@@ -120,7 +122,14 @@ class RegisterController extends AbstractController
                 'success',
                 "Votre compte à bien été créé. Veuillez vous connecter"
             );
-
+            
+            //* -> Envoie d'un email de confirmation d'inscription
+            $mail = new Mail();
+            $vars = [
+                'firstname' => $user->getFirstname(),
+            ];
+            $mail->send($user->getEmail(),$user->getFirstname().' '.$user->getLastname(),'Bonjour, test de ma class mail', "welcome.html", $vars);
+            
             //* -> Redirection de l'utilisateur vers la page de connexion après inscription réussie.
             return $this->redirectToRoute('app_login');
 

@@ -19,6 +19,8 @@ use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+
     /*
         - use App\Entity\User; : Indique que ce contrôleur gère l'entité User.
         - use EasyCorp\Bundle\EasyAdminBundle\Config\Crud; : Permet de configurer les options d'affichage et de comportement pour les opérations CRUD.
@@ -105,21 +107,42 @@ class UserCrudController extends AbstractCrudController
             */
 
             //* -> Crée un champ de texte pour le prénom de l’utilisateur avec le label "Prénom".
-            TextField::new('firstname')->setLabel('Prénom'),
+            TextField::new('firstname')
+                ->setLabel('Prénom'),
                 /* 
                     - TextField::new('firstname') : Crée un nouveau champ de texte pour la propriété firstname de l’entité User.
                     - setLabel('Prénom') : Définit le libellé de ce champ dans l’interface comme "Prénom".
                 */
 
             //* -> Crée un champ de texte pour le nom de l’utilisateur avec le label "Nom".
-            TextField::new('lastname')->setLabel('Nom'),
+            TextField::new('lastname')
+                ->setLabel('Nom'),
                 /*
                     - TextField::new('lastname') : Crée un champ de texte pour la propriété lastname.
                     - setLabel('Nom') : Définit le libellé de ce champ comme "Nom".
                 */
+            
+            //* -> Cré un champ de choix pour les roles
+            ChoiceField::new('roles')
+            ->setLabel('Permissions')
+            ->setHelp('Vous pouvez choisir le role de cet utilisateur')
+            ->setChoices([
+                'ROLE_USER' => 'ROLE_USER',
+                'ROLE_ADMIN' => 'ROLE_ADMIN',
+            ])->allowMultipleChoices(),
+                /*
+                    - ChoiceField : C'est une classe fournie par EasyAdmin pour afficher un champ de sélection (choix d'options) dans le formulaire. Il est utilisé pour des valeurs prédéfinies que l'utilisateur doit sélectionner (comme des rôles dans ce cas).
+                    - ::new('roles') : La méthode new() crée une instance du champ de type ChoiceField.
+                        - 'roles' : Indique la propriété de l'entité qui est associée à ce champ. Dans cet exemple, il s'agit de la propriété roles, qui contient les rôles attribués à l'utilisateur.
+                    - roles : Une colonne de type JSON dans la base de données. Elle stocke les rôles de l'utilisateur sous forme de tableau (exemple : ["ROLE_USER", "ROLE_ADMIN"]).
+                    - setChoices() : Définit les options disponibles dans le champ. Les choix sont spécifiés sous forme d'un tableau associatif :
+                        - La clé (à gauche) représente le libellé affiché dans l'interface (par exemple, ROLE_USER).
+                        - La valeur (à droite) correspond à la valeur réelle enregistrée dans la base de données (par exemple, ROLE_USER).
+                */
 
             //* -> Crée un champ de texte pour l’email, affiché uniquement sur la page d’index, avec le label "Email".    
-            TextField::new('email')->setLabel('Email')->onlyOnIndex(),
+            TextField::new('email')
+                ->setLabel('Email')->onlyOnIndex(),
                 /*
                     - TextField::new('email') : Crée un champ de texte pour la propriété email.
                     - setLabel('Email') : Définit le libellé du champ comme "Email".
@@ -146,5 +169,6 @@ class UserCrudController extends AbstractCrudController
         - TextField::new('firstname')->setLabel('Prénom') : Crée un champ de texte pour la propriété firstname avec le label "Prénom".
         - TextField::new('lastname')->setLabel('Nom') : Crée un champ pour la propriété lastname avec le label "Nom".
         - TextField::new('email')->setLabel('Email')->onlyOnIndex() : Crée un champ pour la propriété email avec le label "Email", visible uniquement dans la page d’index (liste des utilisateurs) et non dans les pages de création ou de modification.
+        - ChoiceField : C'est une classe fournie par EasyAdmin pour afficher un champ de sélection (choix d'options) dans le formulaire.
     */
 

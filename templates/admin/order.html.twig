@@ -2,6 +2,16 @@
 
 {% block main %}
 
+    <h2>Agir sur la commande</h2>
+    {# {{order.state}} = L'etat de la commande est à 1 ( en attente de paiement ) on veux donc que si l'order.state de la commande est a 1 on ne puisse pas modifier l'état de la commande #}
+    {% if order.state != 1 %}
+        <a href="{{current_url}}&state=3" class="{% if order.state == 3 %}d-none{% endif %} btn btn-light">Commande en cours de préparation</a>
+        <a href="{{current_url}}&state=4" class="{% if order.state == 4 %}d-none{% endif %} btn btn-light">Commande expédiée</a>
+        <a href="{{current_url}}&state=5" class="{% if order.state == 5 %}d-none{% endif %} btn btn-light">Commande annulée</a>
+    {% else %}
+        <p>Vous ne pouvez pas agir sur une commande qui n'est pas encore payée.</p>
+    {% endif %}
+
     <h3>Commande n°{{ order.id}}</h3>
     {# https://twig.symfony.com/doc/3.x/tags/include.html #}
     {{ include('admin/state.html.twig', { field : { 'value' : order.state } } ) }} 

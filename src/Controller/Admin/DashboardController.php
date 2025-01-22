@@ -22,9 +22,10 @@ use App\Entity\Carrier;
 use App\Entity\User;
 use App\Entity\Product;
 use App\Entity\Category;
+use App\Entity\Header;
 use App\Entity\Order;
 /*
-        - App\Entity\Carrier, User, Product, Category, Order : Ces classes d’entités représentent des tables en base de données pour Carrier, User, Product, Category et Order
+        - App\Entity\Carrier, User, Product, Category, Header, Order : Ces classes d’entités représentent des tables en base de données pour Carrier, User, Product, Category et Order
     */
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -181,6 +182,7 @@ class DashboardController extends AbstractDashboardController
                     - ' Commande ' : Text affiché dans le menu, visible dans l'interface d'administration
                     - Order::class : Specifie l'entité ou le controleur CRUD associé. Ici il point vers l'entité Order pour qui symfony et easyadmin gere par un CRUD controller (OrderCrudController.php)
             */
+        yield MenuItem::linkToCrud('Header', 'fas fa-list', Header::class);
 
     }
 }
