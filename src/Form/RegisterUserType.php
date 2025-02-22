@@ -74,147 +74,71 @@ class RegisterUserType extends AbstractType
     */
         //* -> Objet pour ajouter les champs au formulaire
         $builder
-            // `$builder` : L'objet utilisé pour ajouter les champs au formulaire.
-        
-        //! ** email ** !//
-            //* -> Champ pour l'email
-            ->add('email', EmailType::class, [
-                'label' => "Votre Adresse Email", 
+        ->add('email', EmailType::class, [
+            'label' => "Votre Adresse Email",
+            'attr' => [
+                'placeholder' => "Indiquez votre adresse email",
+                'class' => 'form-control registration-input'
+            ]
+        ])
+        ->add('plainPassword', RepeatedType::class, [
+            'type' => PasswordType::class,
+            'constraints' => [
+                new Length([
+                    'min' => 4,
+                    'max' => 30,
+                ])
+            ],
+            'first_options' => [
+                'label' => 'Votre Mot de Passe',
                 'attr' => [
-                    'placeholder' => "Indiquez votre adresse email"
-                ]
-            ])
-                /*
-                    - add() : Ajoute un champ au formulaire.
-                    - 'email' : Nom du champ, lié à la propriété email dans l’entité User.
-                    - EmailType::class : Type du champ, spécifique pour les emails, avec une validation de format incluse.
-                    - label : Texte affiché à côté du champ, pour guider l’utilisateur.
-                    - `attr` : Définit des attributs HTML supplémentaires.
-                    - placeholder : Texte indicatif dans le champ.
-                */
-    
-        //! ** pwd et sa confirmation (repetition) ** !//
-            //* -> Champs pour le pwd avec confirmation
-            ->add('plainPassword', RepeatedType::class,[
-                /*
-                    - plainPassword : Nom du champ pour le mot de passe, utilisé uniquement dans le formulaire pour la saisie et confirmation du mot de passe.
-                    - RepeatedType::class : Type de champ qui demande à l'utilisateur de saisir deux fois la même information (mot de passe ici).
-                */
-
-                'type' => PasswordType::class,
-                'constraints' => [
-                    new Length([
-                        // `Length` : Contrainte de validation imposant une longueur minimale et maximale au champ.
-                        'min' => 4, 
-                            // `min` : La longueur minimale du mot de passe est de 4 caractères.
-                        'max' => 30, 
-                            // `max` : La longueur maximale du mot de passe est de 30 caractères.
-                    ])
+                    'placeholder' => "Choisissez votre mot de passe",
+                    'class' => 'form-control registration-input'
                 ],
-                    /*
-                        - type : Définit le champ comme PasswordType pour masquer les caractères saisis.
-                        - constraints : Contrainte de longueur, imposant un minimum de 4 et un maximum de 30 caractères.
-                    */
-
-                'first_options' => [
-                    'label' => 'Votre Mot de Passe', 
-                    'attr' => [
-                        'placeholder' => "Choisissez votre mot de passe"
-                            // Texte indicatif dans le champ.
-                    ],
-                    'hash_property_path' => 'password'
-                ],
-                    /*
-                        - first_options : Options pour le premier champ.
-                        - label et placeholder : Indiquent le texte de guidage pour la première saisie du mot de passe.
-                        - hash_property_path : Permet le hachage du mot de passe.
-                    */
-
-                'second_options' => [
-                    'label' => 'Confirmez votre mot de passe',
-                    'attr' => [
-                        'placeholder' => "Confirmez votre mot de passe"
-                            // Texte indicatif pour la confirmation du mot de passe.
-                    ]
-                ],
-                    /*
-                        - second_options : Options pour le second champ, pour la confirmation.
-                    */
-
-                'mapped' => false,
-                    /*
-                        - mapped: false : Ce champ n’est pas directement lié à l’entité User, nécessitant un traitement manuel des données lors de la soumission.
-                    */
-            ])
-
-            //! ** firstname ** !//
-            //* -> Champs pour le prenom
-            ->add('firstname', TextType::class, [
-                'label' => "Votre Prénom", 
-                    // Label affiché à côté du champ de texte.
-                'constraints' => [
-                    new Length([
-                        'min' => 3, 
-                            // Longueur minimale pour le prénom.
-                        'max' => 30 
-                            // Longueur maximale pour le prénom.
-                    ])
-                ],
+                'hash_property_path' => 'password'
+            ],
+            'second_options' => [
+                'label' => 'Confirmez votre mot de passe',
                 'attr' => [
-                    'placeholder' => "Indiquez votre prénom"
-                        // Texte indicatif dans le champ.
+                    'placeholder' => "Confirmez votre mot de passe",
+                    'class' => 'form-control registration-input'
                 ]
-            ])
-                /*
-                    - firstname : Nom du champ pour le prénom de l’utilisateur.
-                    - TextType::class : Champ de texte simple.
-                    - label et placeholder : Affichent une indication pour guider l’utilisateur.
-                    - constraints : Limite la longueur entre 3 et 30 caractères.
-                */
-
-            //! ** lastname ** !//
-            //* -> Champs pour le nom
-            ->add('lastname', TextType::class, [
-                'label' => "Votre Nom", 
-                    // Texte visible à côté du champ.
-                'constraints' => [
-                    new Length([
-                        'min' => 3, 
-                            // Longueur minimale pour le nom.
-                        'max' => 30 
-                            // Longueur maximale pour le nom.
-                    ])
-                ],
-                'attr' => [
-                    'placeholder' => "Indiquez votre nom"
-                        // Texte indicatif dans le champ.
-                ]
-            ])
-                /*
-                    - lastname : Nom du champ pour le nom de l’utilisateur.
-                    - TextType::class : Champ de texte.
-                    - label et placeholder : Indiquent à l’utilisateur quoi entrer.
-                    - constraints : Limite la longueur entre 3 et 30 caractères.
-                */
-            
-            //! ** validation ** !//
-            //* -> Bouton de soumission
-            ->add('submit', SubmitType::class, [
-                // `submit` : Type de champ pour le bouton de soumission.
-                'label' => "Valider", 
-                    // Texte affiché sur le bouton.
-                'attr' => [
-                    'class' => 'btn btn-success'
-                        // Classe CSS pour styliser le bouton (ici une classe Bootstrap pour le rendre vert).
-                ]
-            ]);
-                /*
-                    - submit : Bouton de soumission pour envoyer le formulaire.
-                    - label : Texte affiché sur le bouton.
-                    - class : Classe CSS (btn btn-success) pour styliser le bouton avec Bootstrap (vert).
-                */
-    }
-
+            ],
+            'mapped' => false,
+        ])
+        ->add('firstname', TextType::class, [
+            'label' => "Votre Prénom",
+            'constraints' => [
+                new Length([
+                    'min' => 3,
+                    'max' => 30
+                ])
+            ],
+            'attr' => [
+                'placeholder' => "Indiquez votre prénom",
+                'class' => 'form-control registration-input'
+            ]
+        ])
+        ->add('lastname', TextType::class, [
+            'label' => "Votre Nom",
+            'constraints' => [
+                new Length([
+                    'min' => 3,
+                    'max' => 30
+                ])
+            ],
+            'attr' => [
+                'placeholder' => "Indiquez votre nom",
+                'class' => 'form-control registration-input'
+            ]
+        ])
+        ->add('submit', SubmitType::class, [
+            'label' => "Valider",
+            'attr' => [
+                'class' => 'btn btn-success registration-btn'
+            ]
+        ]);
+    }    
     //! ** options ** !//
     //* -> Configuration des options du formulaire
     public function configureOptions(OptionsResolver $resolver): void

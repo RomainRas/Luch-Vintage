@@ -1,0 +1,29 @@
+{# ! Vue qui gere le mot de passe oublié
+    ! symfony console:make controller
+        ! Name of the form class : PasswordController #}
+
+        {% extends 'base.html.twig' %}
+        {% block body %}
+        <section class="reset-section">
+        <div class="reset-container">
+            <div class="small-bloc">
+                <h1>Mot de passe oublié tet</h1>
+                    {{ form(forgotPasswordForm) }}
+                    <br/>
+                Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a>
+            </div>
+        </div>
+    </section>
+        {% endblock %}
+
+        {# <section class="reset-section">
+        <div class="container-reset my-5">
+            <div class="small-bloc">
+                <h1>Mot de passe oublié tet</h1>
+                    {{ form_start(forgotPasswordForm) }}
+                    {{ form_end(forgotPasswordForm) }}
+                <br/>
+                Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a>
+            </div>
+        </div>
+    </section> #}

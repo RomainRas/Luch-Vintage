@@ -1,23 +1,18 @@
 {% extends 'base.html.twig' %}
-    {# {% extends ... %} : Instruction Twig pour indiquer que ce template étend un autre template. 
-    Ici, il hérite du fichier 'base.html.twig', qui est le template principal. Cela signifie que ce template va réutiliser la structure définie dans 'base.html.twig'. #}
 
 {% block body %}
-    {# {% block body %} : Déclare un bloc de contenu appelé 'body'. 
-    Ce bloc est défini dans le template parent (base.html.twig) et permet d'insérer du contenu personnalisé. #}
-    
-    <div class="container my-5 small-container">
-        <h1>Ma commande</h1>
+    <section class="order-section">
+        <div class="container container-order">
+            <h1>Ma commande</h1>
+
+            {{ form_start(deliverForm) }}
+                {{ form_row(deliverForm.addresses) }}
+                <a href="{{ path('app_account_address_form') }}" class="small">Ajoutez une nouvelle adresse de livraison</a>
+                <hr>
+                {{ form_row(deliverForm.carriers) }}
+                <button type="submit" class="btn btn-success">Valider ma commande</button>
+            {{ form_end(deliverForm) }}
             
-
-        {{form_start (deliverForm) }}
-            {{form_row (deliverForm.addresses) }}
-            <a href="{{ path("app_account_address_form")}}" class="small">Ajoutez une nouvelle adresse de livraison</a>
-            <hr>
-            {{form_row (deliverForm.carriers) }}
-        {{form_end (deliverForm) }}
-
-    </div>
-
+        </div>
+    </section>
 {% endblock %}
-    {# {% endblock %} : Fin du bloc 'body'. Tout le contenu entre {% block body %} et {% endblock %} sera inséré dans le bloc correspondant du template parent 'base.html.twig'. #}

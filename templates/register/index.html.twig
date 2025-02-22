@@ -1,15 +1,42 @@
 {# ! Vue qui gere l'inscription
     ! symfony console:make controller
         ! Name of the form class : RegisterController #}
-{% extends 'base.html.twig' %}
+        {% extends 'base.html.twig' %}
 
-{% block body %}
-    <div class="container my-5">
-        <h1>Inscription</h1>
+        {% block body %}
+            <section class="registration-section">
+                <div class="container container-registration">
+                    <h1>Inscription</h1>
         
-        {{form(registerForm)}}
+                    {{ form_start(registerForm) }}
+                        <div class="form-group">
+                            {{ form_row(registerForm.email, {'attr': {'class': 'form-control registration-input'}}) }}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form_row(registerForm.plainPassword.first, {'attr': {'class': 'form-control registration-input'}}) }}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form_row(registerForm.plainPassword.second, {'attr': {'class': 'form-control registration-input'}}) }}
+                        </div>
         
-        <br/>
-        Vous avez deja un compte ?<a href="{{ path('app_login') }}"> Connectez-vous</a>
-    </div>
-{% endblock %}
+                        <div class="form-group">
+                            {{ form_row(registerForm.firstname, {'attr': {'class': 'form-control registration-input'}}) }}
+                        </div>
+        
+                        <div class="form-group">
+                            {{ form_row(registerForm.lastname, {'attr': {'class': 'form-control registration-input'}}) }}
+                        </div>
+        
+                        <div class="form-group">
+                            {{ form_row(registerForm.submit, {'attr': {'class': 'btn btn-success registration-btn'}}) }}
+                        </div>
+                    {{ form_end(registerForm) }}
+        
+                    <br/>
+                    <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}" class="login-link">Connectez-vous</a></p>
+                </div>
+            </section>
+        {% endblock %}
+        

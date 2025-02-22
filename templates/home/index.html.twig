@@ -3,13 +3,13 @@
         ! Controller name : HomeController #}
 {% extends 'base.html.twig' %}
 {% block body %}
-    {#! Header avec image #}
-    <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+{#! Header avec image #}
+    <div id="Carousel" class="carousel slide mb-6" data-bs-ride="carousel">
         {#* - Barres d'indicateur en bas au centre - #}
         <div class="carousel-indicators">
             {% if headers|length > 1 %}
                 {% for key,header in headers %}
-                    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="{{ key }}" {% if key == 0 %}class="active" aria-current="true"{% endif %} aria-label="{{ header.title }}"></button>
+                    <button type="button" data-bs-target="#Carousel" data-bs-slide-to="{{ key }}" {% if key == 0 %}class="active" aria-current="true"{% endif %} aria-label="{{ header.title }}"></button>
                 {% endfor %}
             {% endif %}
         </div>
@@ -17,14 +17,21 @@
         <div class="carousel-inner">
             {% for key,header in headers %}
                 <div class="carousel-item {% if key == 0 %} active {% endif %}">
-                    <img src="/uploads/{{ header.illustration }}"class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></img>
-                    <div class="container">
+                    <img 
+                        src="/uploads/{{ header.illustration }}"
+                        class="bd-placeholder-img" width="100%" 
+                        height="100%" xmlns="http://www.w3.org/2000/svg" 
+                        aria-hidden="true" 
+                        preserveAspectRatio="xMidYMid slice" 
+                        focusable="false">
+                            <rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></img>
+                    <div class="container carousel-container">
                         <div class="carousel-caption text-start">
                             <h1>{{ header.title }}</h1>
                             <p>
                                 {{ header.content }}
                             </p>
-                            <p><a class="btn btn-lg btn-primary" href=" {{ header.buttonLink }}"> 
+                            <p><a class="btn-global btn btn-lg" href=" {{ header.buttonLink }}"> 
                             {{ header.buttonTitle}}
                             </a></p>
                         </div>
@@ -34,81 +41,80 @@
         </div>
         {#* Button suivant et precedant #}
         {% if headers|length > 1 %}
-            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#Carousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#Carousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
         {% endif %}
     </div>
 
+    {#! Produits à la unes #}
 
-    <!-- Marketing messaging and featurettes
-    ================================================== -->
-    <!-- Wrap the rest of the page in another container to center all the content. -->
 
-    <div class="container marketing">
-        <div class="row">
-            {#! Produits à la unes #}
-            <!-- Three columns of text below the carousel -->
+        <div class="featured-products row justify-content-center pb-5 pt-5">
             {% for product in productsInHomepage %}
-                <div class="col-lg-4">
-                    <img src="/uploads/{{ product.illustration }}" class="img-fluid">
-                    <h2 class="fw-normal mt-2">{{ product.name }}</h2>
-                    <div style="font-size: 14px;">
-                        {{ product.description|raw }}
-                    </div>
-                    <p><a class="btn btn-secondary mt-2" href="{{ path('app_product', { slug : product.slug } ) }}">Découvrir</a></p>
-                </div><!-- /.col-lg-4 -->
+            <div class="card-mainpage col-12 col-md-6 col-lg-4 p-3 text-center justify-content-center m-1">
+                <img class="card-mainpage-img" src="/uploads/{{ product.illustration }}" class="img-fluid">
+                <div class="card-mainpage-body">
+                    <h2 class="card-mainpage-title">{{ product.name }}</h2>
+                    {# <p class="card-mainpage-text">{{ product.description|raw }}</p> #}
+                    <p class="card-mainpage-price">{{ product.priceWt|price }}</p>
+                    <a class="btn btn-global" href="{{ path('app_product', { slug : product.slug } ) }}">Voir</a>
+                </div>
+            </div>
             {% endfor %}
-
-        </div><!-- /.row -->
-
-
-        <!-- START THE FEATURETTES -->
-
-        <hr class="featurette-divider">
-
-        <div class="row featurette">
-            <div class="col-md-7">
-                <h2 class="featurette-heading fw-normal lh-1">First featurette heading. <span class="text-body-secondary">It’ll blow your mind.</span></h2>
-                <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-            </div>
-            <div class="col-md-5">
-                <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-            </div>
         </div>
 
-        <hr class="featurette-divider">
 
+
+    <section class="about-section" id="About" data-bs-spy="scroll" >
         <div class="row featurette">
-            <div class="col-md-7 order-md-2">
-                <h2 class="featurette-heading fw-normal lh-1">Oh yeah, it’s that good. <span class="text-body-secondary">See for yourself.</span></h2>
-                <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how this layout would work with some actual real-world content in place.</p>
+            <div class="col-md-6 first-col">
+                <h2 class="featurette-heading">Pourquoi acheter en seconde main ?</h2>
+                <p class="lead">Opter pour des vêtements de seconde main, c'est choisir un mode de consommation plus responsable et unique.</p>
+                <ul class="no-bullets">
+                    <li>
+                        <img src="{{ asset('assets/img/icons/star.svg') }}" alt="Écologie" class="icon-img">
+                        <strong>Pièces Uniques</strong> Dénichez des vêtements rares et authentiques.</li>
+                    <li>
+                        <img src="{{ asset('assets/img/icons/money.svg') }}" alt="Écologie" class="icon-img">
+                        <strong>Plus Économique</strong> Profitez de pièces de qualité à prix réduit.</li>
+                    <li>
+                        <img src="{{ asset('assets/img/icons/earth.svg') }}" alt="Écologie" class="icon-img">
+                        <strong>Plus Écologique</strong> Réduisez votre empreinte carbone en donnant une seconde vie aux vêtements.
+                    </li>
+                    <li>
+                        <img src="{{ asset('assets/img/icons/art.svg') }}" alt="Écologie" class="icon-img">
+                        <strong>Exprimez votre créativité</strong> Osez les styles uniques et vintage.</li>
+                    <li>
+                        <img src="{{ asset('assets/img/icons/recycling.svg') }}" alt="Écologie" class="icon-img">
+                        <strong>Réduction des déchets</strong> Participez à un mode de vie plus durable.</li>
+                </ul>
             </div>
-            <div class="col-md-5 order-md-1">
-                <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
+            <div class="col-md-6">
+                <img src="{{ asset('assets/img/section-about-img2.png') }}" alt="Acheter en seconde main">
             </div>
         </div>
+    </section>
 
-        <hr class="featurette-divider">
 
-        <div class="row featurette">
-            <div class="col-md-7">
-                <h2 class="featurette-heading fw-normal lh-1">And lastly, this one. <span class="text-body-secondary">Checkmate.</span></h2>
-                <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really intended to be actually read, simply here to give you a better view of what this would look like with some actual content. Your content.</p>
+        <section class="contact-section">
+            <div class="contact-container" data-bs-spy="scroll" data-bs-target="#navbar-example2">
+                <h2 class="contact-title" id="Contact">Contactez-nous</h2>
+                <div class="contact-icons">
+                    <a href="mailto:contact@luchvintage.com" target="_blank">
+                        <img src="{{ asset('assets/img/icons/mail.svg') }}" alt="Email">
+                    </a>
+                    <a href="https://www.instagram.com/luchvintage" target="_blank">
+                        <img src="{{ asset('assets/img/icons/instagram.svg') }}" alt="Instagram">
+                    </a>
+                </div>
             </div>
-            <div class="col-md-5">
-                <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-            </div>
-        </div>
-
-        <hr class="featurette-divider">
-    
+        </section>
         <!-- /END THE FEATURETTES -->
         
-    </div><!-- /.container -->
 {% endblock %}

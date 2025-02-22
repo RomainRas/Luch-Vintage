@@ -34,6 +34,7 @@ use Doctrine\Common\Collections\ArrayCollection;
             - Elle représente une collection d'objets (semblable à un tableau, mais avec des fonctionnalités supplémentaires).
     */
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
     /*
         - use : Mot-clé utilisé pour importer une classe ou un autre élément situé dans un autre namespace.
         - App\Repository\UserRepository : Chemin vers la classe UserRepository, qui est une classe responsable de la gestion des utilisateurs dans la base de données.
@@ -192,6 +193,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'user')]
     private Collection $orders;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $tokenExpireAt = null;
         /*
             - @var Collection<int, Address> : Indique que cette propriété est une collection d’objets Address.
             - #[ORM\OneToMany] : Annotation Doctrine qui définit une relation OneToMany entre l’utilisateur et ses adresses.
@@ -564,6 +571,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                     $order->setUser(null);
                 }
             }
+
+            return $this;
+        }
+
+        public function getToken(): ?string
+        {
+            return $this->token;
+        }
+
+        public function setToken(?string $token): static
+        {
+            $this->token = $token;
+
+            return $this;
+        }
+
+        public function getTokenExpireAt(): ?\DateTimeInterface
+        {
+            return $this->tokenExpireAt;
+        }
+
+        public function setTokenExpireAt(?\DateTimeInterface $tokenExpireAt): static
+        {
+            $this->tokenExpireAt = $tokenExpireAt;
 
             return $this;
         }

@@ -6,8 +6,8 @@
 {% block body %}
     {# {% block body %} : Déclare un bloc de contenu appelé 'body'. 
     Ce bloc est défini dans le template parent (base.html.twig) et permet d'insérer du contenu personnalisé. #}
-    
-    <div class="container my-5">
+<section class="member-section">
+    <div class="member-container">
         {# <div> : Élément HTML qui sert de conteneur pour organiser du contenu. 
             Ici, il enveloppe tout le contenu spécifique à cette page. #}
         {# class="container my-5" : Attributs HTML définissant des classes CSS.
@@ -34,6 +34,7 @@
                             <tr>
                                 <th scope="col">N*</th>
                                 <th scope="col">Date</th>
+                                <th scope="col">Etat</th>
                                 <th scope="col">Total T.T.C</th>
                                 <th scope="col">Details</th>
                             </tr>
@@ -57,6 +58,6 @@
         </div>
 
     </div>
-
+</section>
 {% endblock %}
     {# {% endblock %} : Fin du bloc 'body'. Tout le contenu entre {% block body %} et {% endblock %} sera inséré dans le bloc correspondant du template parent 'base.html.twig'. #}

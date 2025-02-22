@@ -1,0 +1,24 @@
+{# ! Vue qui gere le reset de mot de passe #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="password-update-section">
+        <div class="container container-password-update">
+            <h1>Nouveau mot de passe</h1>
+
+            {{ form_start(form) }}
+                <div class="form-group">
+                    {{ form_row(form.plainPassword.first, {'attr': {'class': 'form-control password-update-input'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.plainPassword.second, {'attr': {'class': 'form-control password-update-input'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.submit, {'attr': {'class': 'btn btn-success password-update-btn'}}) }}
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </section>
+{% endblock %}

@@ -1,28 +1,30 @@
 
 {#? https://getbootstrap.com/docs/5.3/components/navs-tabs/#vertical #}
+<div class="member-nav">
 <ul class="nav flex-column bg-light-yellow">
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_account') }}">Mes commandes</a>
+    <li class="nav-item-member">
+        <a class="nav-link-member" href="{{ path('app_account') }}">Mes commandes</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_account_addresses') }}">Mes adresses</a>
+    <li class="nav-item-member">
+        <a class="nav-link-member" href="{{ path('app_account_addresses') }}">Mes adresses</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_account_modify_pwd') }}">Modifier mon mot de passe</a>
+    <li class="nav-item-member">
+        <a class="nav-link-member" href="{{ path('app_account_modify_pwd') }}">Modifier mon mot de passe</a>
         {# href="{{ path('app_account_modify_pwd') }}" : Attribut href avec un lien généré dynamiquement via la fonction path(). 
         - 'app_account_modify_pwd' est le nom de la route qui redirige vers la page de modification du mot de passe.
         - Le texte du lien est "Modifier mon mot de passe", et il est cliquable pour rediriger l'utilisateur vers cette page. #}
     </li>
     {% if is_granted('ROLE_ADMIN') %}
-    <li class="nav-link" class="nav-item">
-            <a href="{{path('admin')}}">Administration</a>
+    <li class="nav-link-member mb-2 text-decoration-none" class="nav-item-member">
+            <a class="text-decoration-none " href="{{path('admin')}}">Administration</a>
     </li>
     {% endif %}
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_logout') }}">Me déconnecter</a>
+    <li class="nav-item-member">
+        <a class="nav-link-member" href="{{ path('app_logout') }}">Me déconnecter</a>
         {# <a> : Élément HTML pour créer un lien hypertexte. #}
         {# href="{{ path('app_logout') }}" : Attribut href qui définit l'URL de destination du lien.
         - "{{ path('app_logout') }}" : Fonction Twig `path()` qui génère l'URL correspondant à la route nommée 'app_logout'. Cette route est probablement utilisée pour déconnecter l'utilisateur. #}
         {# Me déconnecter : Texte du lien cliquable affiché sur la page. En cliquant dessus, l'utilisateur est redirigé vers l'URL générée par la route 'app_logout' pour se déconnecter. #}
     </li>
 </ul>
+</div>

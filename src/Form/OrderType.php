@@ -46,29 +46,36 @@ class OrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('addresses', EntityType::class,[
+            ->add('addresses', EntityType::class, [
                 'label' => "Choisissez votre adresse de livraison",
                 'required' => true,
                 'class' => Address::class,
                 'expanded' => true,
                 'choices' => $options['addresses'],
-                'label_html' => true
+                'label_html' => true,
+                'attr' => [
+                    'class' => 'custom-radio-group' // Ajout de la classe ici
+                ]
             ])
-            ->add('carriers', EntityType::class,[
+            ->add('carriers', EntityType::class, [
                 'label' => "Choisissez votre transporteur",
                 'required' => true,
                 'class' => Carrier::class,
                 'expanded' => true,
-                'label_html' => true
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => "Valider",
+                'label_html' => true,
                 'attr' => [
-                    'class' => 'w-100 btn btn-success'
+                    'class' => 'custom-radio-group' // Ajout de la classe ici
                 ]
             ])
-        ;
+            ->add('submit', SubmitType::class, [
+                'label' => "Valider ma commande",
+                'attr' => [
+                    'class' => 'btn btn-success w-100'
+                ]
+            ]);
     }
+    
+    
         /*
             addresses :
                 - Type : EntityType.

@@ -1,37 +1,24 @@
 {% extends 'base.html.twig' %}
-    {# {% extends ... %} : Instruction Twig pour indiquer que ce template étend un autre template. 
-    Ici, il hérite du fichier 'base.html.twig', qui est le template principal. Cela signifie que ce template va réutiliser la structure définie dans 'base.html.twig'. #}
 
 {% block body %}
-    {# {% block body %} : Déclare un bloc de contenu appelé 'body'. 
-    Ce bloc est défini dans le template parent (base.html.twig) et permet d'insérer du contenu personnalisé. #}
-    
-    <div class="container my-5">
-        {# <div> : Élément HTML qui sert de conteneur pour organiser du contenu. 
-            Ici, il enveloppe tout le contenu spécifique à cette page. #}
-        {# class="container my-5" : Attributs HTML définissant des classes CSS.
-            - 'container' : Classe Bootstrap qui crée un conteneur avec des marges automatiques pour centrer le contenu et limiter la largeur.
-            - 'my-5' : Classe Bootstrap qui ajoute des marges verticales (margin y-axis) de 5 unités. #}
-        <h1>Espace membre</h1>
-            {# <h1> : Balise HTML de titre de niveau 1, utilisée pour indiquer le titre principal de la page.
-            Ici, elle affiche "Espace membre privé !", signifiant que cette section est réservée aux membres connectés. #}
+    <section class="section-order-details">
+        <div class="container container-order-details">
+            <h1>Espace membre</h1>
 
-        {#? https://getbootstrap.com/docs/5.3/layout/columns/#how-they-work #}
-        <div class="row">
-            <div class="col-md-3">
-                {% include 'account/menu.html.twig' %}
-            </div>
-            <div class="col-md-9">  
-                <small><a href="{{ path('app_account') }}" class="btn btn-dark btn-sm">Retour</a></small>
-                <h5 class="mt-4">Ma commande n° {{ order.id}}</h5>
-                
+            <div class="row">
+                <div class="col-md-3">
+                    {% include 'account/menu.html.twig' %}
+                </div>
+                <div class="col-md-9">
+                    <a href="{{ path('app_account') }}" class="btn btn-dark btn-sm">Retour</a>
+                    <h5 class="mt-4">Ma commande n° {{ order.id }}</h5>
+                    
                     {{ include('admin/state.html.twig', { field : { 'value' : order.state } } ) }} 
                     <br>
                     <hr>
-            
-                    {# https://twig.symfony.com/doc/3.x/filters/date.html #}
+                    
                     <span>Passé le {{ order.createdAt|date('d/m/y') }}</span><br>
-                
+                    
                     <div class="row my-4">
                         <div class="col-md-6">
                             <strong>Adresse de livraison</strong><br>
@@ -42,11 +29,11 @@
                             {{ order.carrierName }} 
                         </div>
                     </div>
-                    {# {{ dump(order) }} #}
                     <hr>
+                    
                     <strong>Contenu de la commande :</strong><br>
-                
-                    <table class="table">
+
+                    <table class="table order-table">
                         <thead>
                             <tr>
                                 <th scope="col">Illustration</th>
@@ -57,10 +44,9 @@
                                 <th scope="col">Total TTC</th>
                             </tr>
                         </thead>
-                
+
                         <tbody>
                             {% for product in order.orderDetails %}
-                            {# {{ dump(product) }} #}
                                 <tr>
                                     <td>
                                         <img src="/uploads/{{ product.productIllustration }}" width="100px" alt="">
@@ -70,7 +56,6 @@
                                     <td>{{ product.productPrice|price }}</td>
                                     <td>{{ product.productTva }}%</td>
                                     {% set coeff = 1 + (product.productTva / 100) %}
-                
                                     <td>{{ ((product.productPrice * coeff) * product.productQuantity)|price }}</td>
                                 </tr>
                             {% endfor %}
@@ -84,15 +69,16 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="text-right ">
+
+                    <div class="text-right">
                         <strong>Total H.T : </strong> {{ (order.totalWt - order.totalTva)|price }}<br/>
                         <strong>Total TVA : </strong> {{ order.totalTva|price }}<br/>
                         <strong>Total T.T.C : </strong> {{ order.totalWt|price }}
                     </div>
-            </div>   
+                </div>
+            </div>
         </div>
-
-    </div>
-
+    </section>
 {% endblock %}
+
     {# {% endblock %} : Fin du bloc 'body'. Tout le contenu entre {% block body %} et {% endblock %} sera inséré dans le bloc correspondant du template parent 'base.html.twig'. #}

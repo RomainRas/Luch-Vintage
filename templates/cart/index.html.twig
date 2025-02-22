@@ -6,55 +6,54 @@
     {# {% block body %} : Déclare un bloc de contenu appelé 'body'. 
     Ce bloc est défini dans le template parent (base.html.twig) et permet d'insérer du contenu personnalisé. #}
     
-    <div class="container my-5">
-        <h1>Mon panier</h1>
-        
-        <div class="row">
-            
-            <div class="col md-8">
-                {% for product in cart %}
-                    <div class="row mt-2">
-                        <div class="col-md-2">
-                            <img src="/uploads/{{ product.objet.illustration}}" class="img-fluid" alt="{{ product.objet.name }}">
-                        </div>
-                        <div class="col-md-6">
-                            <strong>{{ product.objet.name }}</strong>
-                            <span class="d-block small">Prix Unitaire : {{ product.objet.pricewt|price }}</span>
-                        </div>
-                        <div class="col-md-2 text-right">
-                            <a href="{{ path( 'app_cart_decrease', { id : product.objet.id } ) }}">-</a> 
-                            <span class="badge text-bg-secondary">x {{ product.qty }}</span>
-                            <a href="{{ path( 'app_cart_add', { id : product.objet.id } ) }}">+</a> 
-                        </div>
-                        <div class="col-md-2 text-right">
-                        <strong>{{ (product.qty * product.objet.pricewt)|price }}</strong>
-                        </div>
-                    </div>
-                {% endfor %}
-                <a href="{{ path('app_cart_remove') }}" class="small d-block mt-3">Vider le panier</a>
-            </div>
+    <section class="section-cart">
+        <div class="container container-cart my-5">
+            <h1>Mon panier</h1>
 
-            <div class="col md-4">
-                <div class="bg-light p-3">
-                    <div class="flex justify-content-between">
-                        <span class="fw-bold">Total Produits :</span>
-                        <span>{{ fullCartQuantity }}</span>
-                    </div>
-                    <div class="flex justify-content-between mt-3">
-                        <span class="fw-bold">Prix Total TTC :</span>
-                        <span>{{ totalWt|price }}</span>
-                    </div>
-                    <div>
-                        <a href="{{ path('app_order') }}" class="btn btn-success w-100 mt-3">Commander</a>
+            <div class="row">
+                <!-- Produits dans le panier -->
+                <div class="col-md-8">
+                    {% for product in cart %}
+                        <div class="cart-item row mt-2">
+                            <div class="col-md-2">
+                                <img src="/uploads/{{ product.objet.illustration }}" class="img-fluid" alt="{{ product.objet.name }}">
+                            </div>
+                            <div class="col-md-6">
+                                <strong>{{ product.objet.name }}</strong>
+                                <span class="d-block small">Prix Unitaire : {{ product.objet.pricewt|price }}</span>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <a href="{{ path( 'app_cart_decrease', { id : product.objet.id } ) }}">-</a> 
+                                <span class="badge text-bg-secondary">x {{ product.qty }}</span>
+                                <a href="{{ path( 'app_cart_add', { id : product.objet.id } ) }}">+</a> 
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <strong>{{ (product.qty * product.objet.pricewt)|price }}</strong>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <a href="{{ path('app_cart_remove') }}" class="btn-global">Vider le panier</a>
+                </div>
+
+                <!-- Récapitulatif du panier -->
+                <div class="col-md-4">
+                    <div class="cart-summary p-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Total Produits :</span>
+                            <span>{{ fullCartQuantity }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <span class="fw-bold">Prix Total TTC :</span>
+                            <span>{{ totalWt|price }}</span>
+                        </div>
+                        <div>
+                            <a href="{{ path('app_order') }}" class="btn btn-success w-100 mt-3">Commander</a>
+                        </div>
                     </div>
                 </div>
-                Récap de mon panier( prix, bouton commander, etc ...)
-                Total prduit : {{ fullCartQuantity }}
             </div>
-
         </div>
-
-    </div>
-
+    </section>
 {% endblock %}
+
     {# {% endblock %} : Fin du bloc 'body'. Tout le contenu entre {% block body %} et {% endblock %} sera inséré dans le bloc correspondant du template parent 'base.html.twig'. #}

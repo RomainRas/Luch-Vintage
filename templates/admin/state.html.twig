@@ -1,12 +1,12 @@
 {# https://getbootstrap.com/docs/4.0/components/badge/ #}
 {% if field.value == 1 %}
-    <span class="badge text-bg-secondary">En attente de paiement</span>
+    <span class="btn-global">En attente de paiement</span>
 {% elseif field.value == 2 %}
-    <span class="badge text-bg-info">Payée</span>
+    <span class="btn-global">Payée</span>
 {% elseif field.value == 3 %}
-    <span class="badge text-bg-warning">En cours de préparation</span>
+    <span class="btn-global">En cours de préparation</span>
 {% elseif field.value == 4 %}
-    <span class="badge text-bg-success">Expédiée</span>
+    <span class="btn-global">Expédiée</span>
 {% elseif field.value == 5 %}
-    <span class="badge text-bg-danger">Annulée</span>
+    <span class="btn-global">Annulée</span>
 {% endif %}

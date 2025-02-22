@@ -1,9 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container my-5">
-        <h1>Page introuvable</h1>
-
-        <p>Cette page est introuvable. <a href="{{path('app_home')}}">Retour à l'accueil</a></p>
-    </div>
+    <section class="error-section">
+        <div class="container container-error">
+            <h1>Page introuvable</h1>
+            <p>Cette page est introuvable. <a href="{{ path('app_home') }}">Retour à l'accueil</a></p>
+        </div>
+    </section>
 {% endblock %}

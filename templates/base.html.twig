@@ -10,76 +10,124 @@
     <title>Luch.Vintage - 100% Seconde Main</title>
     <meta name="description" content="La boutique spécialisée dans la seconde main !">
 
-    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
+    <link href="{{ asset('assets/css/base.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/carousel.css') }}" rel="stylesheet">
-    <link href="{{asset('/assets/css/custom.css') }}" rel="stylesheet">  
-    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="{{ asset('assets/css/categorie.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/contact.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/featured-product.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/footer.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/navbar.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/product.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/section.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/login.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/account.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/adress.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/cart.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/mail-reset-pwd.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/order2.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/order-summary.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/order-details.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/register.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/password-update.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/error.css') }}" rel="stylesheet">
 </head>
 <body>
 
-<header data-bs-theme="dark">
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href={{ path('app_home') }}>Luch.Vintage</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
-                    </li>
-                    {% for category in allCategories %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_category', { slug : category.slug } ) }}">{{ category.name }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
-                <div class="speed-menu">
+<header>
+{# ! NAVBAR #}
+<nav class="navbar navbar-expand-md fixed-top">
+    <div class="container-fluid">
+        {# LOGO #}
+        <a class="navbar-brand" href="{{ path('app_home') }}">Luch.Vintage</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                {# MENU #}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">
+                        Accueil
+                    </a>
+                </li>
+                {# Menu déroulant pour la boutique #}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="boutiqueDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Boutique
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="boutiqueDropdown">
+                        {% for category in allCategories %}
+                        <li><a class="dropdown-item" href="{{ path('app_category', { slug : category.slug }) }}">{{ category.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {# A propos #}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}#About">A propos</a>
+                </li>
+                {# Contact #}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}#Contact">Contact</a>
+                </li>
+            </ul>
+
+            <!-- Menu rapide avec connexion utilisateur et panier -->
+            <div class="user-menu">
                 {% if app.user %}
-                    <a href="{{ path('app_account') }}"><i data-feather="user"></i> {{ app.user.firstname}}</a>
+                    <a href="{{ path('app_account') }}">
+                        <img src="{{ asset('assets/img/icons/user.svg') }}" alt="Login Icon" width="30" height="30"> {{ app.user.firstname }}
+                    </a>
                 {% else %}
-                    <a href="{{ path('app_login') }}"><i data-feather="user"></i></a>
+                    <a href="{{ path('app_login') }}">
+                        <img src="{{ asset('assets/img/icons/user.svg') }}" alt="Login Icon" width="30" height="30">
+                    </a>
                 {% endif %}
                     <a href="{{ path('app_cart') }}">
-                        <i data-feather="shopping-cart"></i>
+                    <img src="{{ asset('assets/img/icons/shopping-cart.svg') }}" alt="Login Icon" width="30" height="30">
                         <span class="badge text-bg-light">{{ fullCartQuantity }}</span>
                     </a>
-                    
-                </div>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 </header>
 
 <main>
 
-    <div class="container">
+<div class="flash-container">
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            {#? https://getbootstrap.com/docs/5.3/components/alerts/#examples #}
             <div class="alert mt-4 alert-{{ label }}">
                 {{ message }}
             </div>
         {% endfor %}
     {% endfor %}
-    </div>
+</div>
+
 
 
     {% block body %}{% endblock %}
 </main>
 
     <!-- FOOTER -->
-    <footer class="container">
-        <p>&copy; Luch.Vintage <a href="#">CGV</a> &middot; <a href="#">CGU</a></p>
-    </footer>
-</main>
+<footer class="footer mt-4 py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="footer-links">
+            <a href="#">Mentions légales</a> |
+            <a href="#">CGU</a> |
+            <a href="#">CGV</a> |
+            <a href="#">Protection des données</a>
+        </div>
+        <div class="footer-copy text-muted">
+            &copy; {{ "now"|date("Y") }} Luch Vintage - Tous droits réservés.
+        </div>
+    </div>
+</footer>
 
-<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('assets/js/global.js') }}"></script>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
