@@ -128,7 +128,7 @@ class RegisterController extends AbstractController
             $vars = [
                 'firstname' => $user->getFirstname(),
             ];
-            $mail->send($user->getEmail(),$user->getFirstname().' '.$user->getLastname(),'Bonjour, test de ma class mail', "welcome.html", $vars);
+            $mail->send($user->getEmail(),$user->getFirstname().' '.$user->getLastname(),'Bonjour, merci pour votre inscription<', "welcome.html", $vars);
             
             //* -> Redirection de l'utilisateur vers la page de connexion après inscription réussie.
             return $this->redirectToRoute('app_login');

@@ -23,6 +23,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints as Assert;
+
     /*
         - use : Importation de classes externes, nécessaires au fonctionnement du formulaire.
             - User : L’entité User à laquelle ce formulaire est lié.
@@ -74,19 +76,36 @@ class RegisterUserType extends AbstractType
     */
         //* -> Objet pour ajouter les champs au formulaire
         $builder
-        ->add('email', EmailType::class, [
+        ->add('email', EmailType::class, [ // NotBlank, email, UniqueEntity
             'label' => "Votre Adresse Email",
             'attr' => [
                 'placeholder' => "Indiquez votre adresse email",
                 'class' => 'form-control registration-input'
-            ]
+            ],
+            'constraints' => [
+                new Assert\NotBlank([
+                    'message' => "L'adresse email est obligatoire."
+                ]),
+                new Assert\Email([
+                    'message' => "L'adresse email '{{ value }}' n'est pas valide."
+                ]),
+            ],
         ])
-        ->add('plainPassword', RepeatedType::class, [
+        ->add('plainPassword', RepeatedType::class, [ // NotBlank, min12, regex 
             'type' => PasswordType::class,
             'constraints' => [
+                new Assert\NotBlank([
+                    'message' => "Le mot de passe est obligatoire."
+                ]),
                 new Length([
-                    'min' => 4,
+                    'min' => 12,
                     'max' => 30,
+                    'minMessage' => "Le mot de passe doit contenir au moins 12 caractères.",
+                    'maxMessage' => "Le mot de passe ne doit pas dépasser 30 caractères."
+                ]),
+                new Assert\Regex([
+                    'pattern' => '/^(?=.*[A-Z])(?=.*[\W])(?=.*\d)(?!.*\s).{12,30}$/',
+                    'message' => "Le mot de passe doit contenir au moins une majuscule, un chiffre, un symbole et ne pas contenir d'espaces."
                 ])
             ],
             'first_options' => [
@@ -104,15 +123,20 @@ class RegisterUserType extends AbstractType
                     'class' => 'form-control registration-input'
                 ]
             ],
+            'invalid_message' => "Les mots de passe ne correspondent pas.",
             'mapped' => false,
         ])
+        
         ->add('firstname', TextType::class, [
             'label' => "Votre Prénom",
             'constraints' => [
                 new Length([
                     'min' => 3,
                     'max' => 30
-                ])
+                ]),
+                new Assert\NotBlank([
+                    'message' => "L'adresse email est obligatoire."
+                ]),
             ],
             'attr' => [
                 'placeholder' => "Indiquez votre prénom",
@@ -125,7 +149,10 @@ class RegisterUserType extends AbstractType
                 new Length([
                     'min' => 3,
                     'max' => 30
-                ])
+                ]),
+                new Assert\NotBlank([
+                    'message' => "L'adresse email est obligatoire."
+                ]),
             ],
             'attr' => [
                 'placeholder' => "Indiquez votre nom",
