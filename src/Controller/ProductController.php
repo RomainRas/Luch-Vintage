@@ -40,49 +40,25 @@ class ProductController extends AbstractController
 */
     //* -> Route qui do produit definit par son slug
     #[Route('/produits/{slug}', name: 'app_product')]
-        /*
-            - Définit la route `/produits/{slug}`, où `{slug}` est une variable dynamique correspondant au slug du produit.
-            - Le nom de la route est `app_product`, ce qui permet de la référencer facilement dans le code.
-        */
+
     //! ** Méthode pour afficher les détails d'un produit spécifique en fonction de son slug. ** !//
     //* -> `ProductRepository $productRepository` est injecté pour interagir avec la base de données des produits.
     public function index($slug, ProductRepository $productRepository): Response
-        /*
-            - index : Nom de la méthode, souvent utilisée comme action principale d’un contrôleur.
-            - $slug : Paramètre qui représente le slug du produit passé dans l’URL.
-            - ProductRepository $productRepository : Paramètre injecté, permettant d’accéder aux méthodes de requête de l’entité Product.
-            - : Response : Indique que la méthode retourne un objet Response.
-        */
 
     {
         //* -> Recherche le produit correspondant au slug dans la base de données via le repository `ProductRepository`.
         $product = $productRepository->findOneBySlug($slug);
-            /*
-                - $product = $productRepository->findOneBySlug($slug); : Utilise la méthode findOneBySlug() du ProductRepository pour récupérer le produit correspondant au slug passé en paramètre.
-                - findOneBySlug($slug) : Requête qui recherche un produit dans la base de données en fonction de son slug. Le slug est un identifiant unique utilisé dans l’URL pour reconnaître le produit.
-            */
+
         //* -> Si aucun produit n'est trouvé avec ce slug, l'utilisateur est redirigé vers la page d'accueil.
         if (!$product) {
             return $this->redirectToRoute('app_home');
         }
-            /*
-                - if (!$product) : Vérifie si aucun produit n’a été trouvé pour le slug donné.
-                - /!$product : Si $product est null, cela signifie qu’aucun produit ne correspond au slug fourni.
-                - return $this->redirectToRoute('app_home'); : Redirige l’utilisateur vers la page d’accueil (app_home) si le produit n’est pas trouvé.
-                - $this->redirectToRoute('app_home') : Méthode de AbstractController qui effectue une redirection vers une route spécifiée.
-            */
         
         //* -> Affiche la vue Twig `product/index.html.twig`, correspondant à la page de détail du produit.
         return $this->render('product/index.html.twig', [
             'product' => $product,
                 // Passe la variable `product` à la vue, qui contient les informations du produit.
         ]);
-            /*
-                - $this->render(...) : Utilise la méthode render() d’AbstractController pour générer et afficher une vue Twig.
-                - 'product/index.html.twig' : Chemin du fichier de template utilisé pour afficher les détails du produit.
-                - ['product' => $product] : Tableau de variables passées au template :
-                - 'product' => $product : Passe le produit trouvé ($product) à la vue Twig, afin que ses détails puissent être affichés sur la page.
-            */
     }
 }
 /*

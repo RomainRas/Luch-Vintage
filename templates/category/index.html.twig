@@ -1,14 +1,9 @@
 {% extends 'base.html.twig' %}
-    {# {% extends ... %} : Instruction Twig pour indiquer que ce template étend un autre template. 
-    Ici, il hérite du fichier 'base.html.twig', qui est le template principal. Cela signifie que ce template va réutiliser la structure définie dans 'base.html.twig'. #}
-
     {% block body %}
 <section class="categorie-section">
     <div class="container category-container">
         <h1 class="category-title">{{ category.name }}</h1>
-        
         {# <p class="category-subtitle">Cette catégorie contient {{ category.products|length }} produit(s).</p> #}
-        
         <div class="row">
             {% for product in category.products %}
                 <div class="col-md-4">

@@ -51,40 +51,17 @@ class CategoryController extends AbstractController
         */
     //! ** Méthode pour afficher une catégorie spécifique en fonction de son slug  ** !//
     public function index($slug, CategoryRepository $categoryRepository): Response
-        /*
-            - public function index($slug, CategoryRepository $categoryRepository): Response : Déclaration de la méthode index qui gère l’affichage d’une catégorie.
-            - $slug : Paramètre pour le slug de la catégorie, utilisé pour identifier une catégorie spécifique.
-            - CategoryRepository $categoryRepository : Injecte le CategoryRepository pour accéder aux méthodes de requête de l’entité Category.
-            - : Response : Type de retour spécifiant que la méthode retourne un objet Response.
-        */
     {   
         //* -> Récupère une catégorie depuis le repository en utilisant le slug
         $category = $categoryRepository->findOneBySlug($slug);
-            /*
-                - $category = $categoryRepository->findOneBySlug($slug); : Utilise findOneBySlug() du CategoryRepository pour récupérer la catégorie correspondant au slug passé en paramètre.
-                - findOneBySlug($slug) : Méthode qui cherche une catégorie dans la base de données en fonction de son slug. Le slug est une chaîne de caractères unique utilisée pour identifier la catégorie dans l’URL.
-            */
-
         //* -> Si la catégorie n'existe pas, redirige vers la page d'accueil
         if (!$category) {
             return $this->redirectToRoute('app_home');
         }
-            /*
-                - if (!$category) : Vérifie si aucune catégorie n’a été trouvée pour le slug donné.
-                - /!$category : Si $category est null, cela signifie qu'aucune catégorie n’a été trouvée avec ce slug.
-                - return $this->redirectToRoute('app_home'); : Redirige vers la route app_home (généralement la page d’accueil) si la catégorie n’a pas été trouvée.
-                - $this->redirectToRoute('app_home') : Méthode pour rediriger vers une route Symfony. Ici, elle redirige l’utilisateur vers la page d’accueil si le slug de catégorie est incorrect.
-            */
-
         //* -> Rend la vue Twig et lui passe la catégorie récupérée
         return $this->render('category/index.html.twig', [
             'category' => $category,
         ]);
-            /*
-                - $this->render(...) : Utilise le moteur de templates Twig pour générer et afficher une vue.
-                - 'category/index.html.twig' : Chemin du fichier de template Twig qui sera utilisé pour afficher la page de la catégorie.
-                - 'category' => $category : Passe la catégorie trouvée ($category) en tant que variable category à la vue, pour pouvoir l’afficher dans le fichier Twig.
-            */
     }
 }
 /*

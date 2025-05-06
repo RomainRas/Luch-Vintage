@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
     {# {% extends ... %} : Instruction Twig pour indiquer que ce template étend un autre template. 
     Ici, il hérite du fichier 'base.html.twig', qui est le template principal. Cela signifie que ce template va réutiliser la structure définie dans 'base.html.twig'. #}
-
 {% block body %}
     {# {% block body %} : Déclare un bloc de contenu appelé 'body'. 
     Ce bloc est défini dans le template parent (base.html.twig) et permet d'insérer du contenu personnalisé. #}
@@ -12,7 +11,6 @@
             <div class="col-md-6">
                 <img src="{{ asset('uploads/' ~ product.illustration) }}" class="product-img img-fluid" alt="{{ product.name }}">
             </div>
-
             <!-- Détails du produit -->
             <div class="col-md-6 product-details">
                 <small class="breadcrumb">

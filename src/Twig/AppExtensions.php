@@ -62,12 +62,6 @@ class AppExtensions extends AbstractExtension implements GlobalsInterface
         $this->categoryRepository = $categoryRepository;
         $this->cart = $cart;
     }
-        /*
-            - __construct() : Méthode de construction pour initialiser les dépendances nécessaires.
-            - CategoryRepository $categoryRepository = null : Injection de dépendance pour le dépôt de catégories (facultatif, peut être null).
-            - Cart $cart : Injection de dépendance pour accéder aux méthodes du panier.
-            - $this->categoryRepository et $this->cart : Stocke les instances injectées dans les propriétés de la classe.
-        */
 
     //! ** getFilters ** !//
     //* -> getFilters est une méthode obligatoire dans une extension Twig pour ajouter des filtres personnalisés.
@@ -78,10 +72,6 @@ class AppExtensions extends AbstractExtension implements GlobalsInterface
             new TwigFilter('price', [$this, 'formatPrice'])
         ];
     }
-        /*
-            - getFilters() : Méthode qui retourne un tableau de filtres personnalisés pour Twig.
-            - new TwigFilter('price', [$this, 'formatPrice']) : Crée un filtre nommé price qui applique la méthode formatPrice à une valeur dans Twig.
-        */
 
     //! ** formatPrice ** !//
     //* -> formatPrice : Méthode pour formater un nombre en ajoutant une virgule comme séparateur décimal et un symbole `€`.
@@ -90,11 +80,6 @@ class AppExtensions extends AbstractExtension implements GlobalsInterface
         //* -> number_format : Formate le nombre avec 2 décimales, une virgule comme séparateur, et ajoute le symbole euro.
         return number_format($number,'2',','). ' €';
     }
-        /*
-            - formatPrice() : Méthode utilisée par le filtre price pour formater un nombre en tant que prix.
-            - $number : Paramètre représentant le montant à formater.
-            - number_format($number, '2', ',') . ' €' : Utilise number_format() pour formater le nombre avec 2 décimales, une virgule comme séparateur, et ajoute le symbole de l’euro à la fin.
-        */
 
     //! ** getGlobals ** !//
     //* -> getGlobals est une méthode de `GlobalsInterface` pour ajouter des variables globales accessibles dans tous les templates Twig.
@@ -107,13 +92,6 @@ class AppExtensions extends AbstractExtension implements GlobalsInterface
             'fullCartQuantity' => $this->cart->fullQuantity()
         ];
     }
-        /*
-            - getGlobals() : Méthode pour définir des variables globales accessibles dans tous les templates Twig.
-            - allCategories : Variable globale qui contient toutes les catégories récupérées depuis le dépôt CategoryRepository.
-            - $this->categoryRepository->findAll() : Utilise findAll() pour obtenir toutes les catégories et les rendre disponibles dans Twig sous le nom allCategories.
-            - fullCartQuantity : Variable globale qui contient la quantité totale des articles dans le panier.
-            - $this->cart->fullQuantity() : Appelle la méthode fullQuantity() de Cart pour obtenir le total et le rend accessible sous fullCartQuantity dans Twig.
-        */
 }
 /*
 !Explications supplémentaires

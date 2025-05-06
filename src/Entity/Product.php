@@ -35,64 +35,38 @@ class Product
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-        /*
-            - #[ORM\Id] : Indique que cette propriété est la clé primaire de l’entité.
-            - #[ORM\GeneratedValue] : L’identifiant est généré automatiquement.
-            - #[ORM\Column] : Définit cette propriété comme une colonne dans la base de données.
-            - private ?int $id = null : Propriété privée de type int ou null, initialisée à null.
-        */
 
     //! ** name ** !//
     //* -> Propriété `$name` pour le nom du produit, de type `string` avec une longueur maximale de 255 caractères.
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-        /*
-            - #[ORM\Column(length: 255)] : Définit une colonne de type string avec une longueur maximale de 255 caractères pour le nom du produit.
-            - private ?string $name = null : Propriété pour stocker le nom du produit.
-        */
 
     //! ** slug ** !//
     //* -> Propriété `$slug` pour un identifiant unique du produit dans l'URL, également de type `string`.
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
-        /*
-            - private ?string $slug = null : Propriété pour stocker le slug (identifiant URL-friendly) du produit.
-        */
 
     //! ** description ** !//
     //* -> Propriété `$description` pour la description détaillée du produit, de type `TEXT` pour accepter de longues descriptions.
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
-        /*
-            - #[ORM\Column(type: Types::TEXT)] : Définit une colonne de type TEXT pour stocker de grandes quantités de texte.
-            - private ?string $description = null : Description détaillée du produit.
-        */
+
 
     //! ** illustration ** !//
     //* -> Propriété `$illustration` pour le chemin de l'image du produit, de type `string` avec une longueur maximale de 255 caractères.
     #[ORM\Column(length: 255)]
     private ?string $illustration = null;
-        /*
-            - #[ORM\Column(length: 255)] : Colonne de type string avec une longueur maximale de 255 caractères pour l’illustration du produit.
-            - private ?string $illustration = null : Stocke le chemin ou l’URL de l’image associée au produit.
-        */
 
     //! ** price ** !//
     //* -> Propriété `$price` pour le prix HT du produit, de type `float`.
     #[ORM\Column]
     private ?float $price = null;
-        /*
-            - #[ORM\Column] : Colonne de type float pour stocker le prix du produit.
-            - private ?float $price = null : Prix hors taxes du produit.
-        */
 
     //! ** tva ** !//
     //* -> Propriété `$tva` pour le taux de TVA appliqué au produit, de type `float`.
     #[ORM\Column]
     private ?float $tva = null;
-        /*
-            - private ?float $tva = null : Colonne pour stocker le taux de TVA applicable au produit.
-        */
+
 
     /*
     ************************************************************

@@ -43,11 +43,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
     */
 
 
-/*
-************************************************************
-!                 DECLARATION DE CLASSE                    *
-************************************************************
-*/
+
 //* -> Cette ligne déclare la classe UserCrudController, qui gère les opérations CRUD de l’entité User. En héritant de AbstractCrudController, la classe obtient les fonctionnalités CRUD de base pour gérer les utilisateurs.
 class DashboardController extends AbstractDashboardController
     /* 
@@ -66,26 +62,12 @@ class DashboardController extends AbstractDashboardController
     //! ** Route de l'url /admin ** !//
     //* -> Lorsque les utilisateurs accèdent à /admin, la methode index(): Response sera exécutée.
     #[Route('/admin', name: 'admin')]
-        /*
-            - #[Route(...)] : Attribut PHP pour définir une route Symfony, qui lie une URL spécifique à une méthode de contrôleur.
-            - '/admin' : Chemin de l’URL. Ici, /admin est l’URL qui active cette méthode (index).
-            - name: 'admin' : Nom unique de la route, ici admin, pour faire référence à cette route facilement dans d’autres parties de l’application.
-        */
     
     //! ** Méthode qui gere la logique d'affichage du tableau de bord admin ** !//
     //* -> Déclare la méthode index, accessible publiquement, qui retourne un objet Response. Cette méthode gère la logique d’affichage du tableau de bord lorsqu’un utilisateur accède à l’URL /admin.
     public function index(): Response
-        /*
-            - public : Mot-clé définissant la visibilité de la méthode. public permet à la méthode d’être accessible depuis l’extérieur de la classe.
-            - function : Mot-clé pour déclarer une méthode.
-            - index : Nom de la méthode. Elle gère l’action par défaut de ce contrôleur (la page principale du tableau de bord).
-            - (): Response : Le type de retour de la méthode est Response, un objet Symfony représentant la réponse HTTP.
-        */
     
     {
-        //* Option 1. You can make your dashboard redirect to some common page of your backend
-            // Cette section décrit différentes manières de rediriger l’utilisateur une fois qu’il accède au tableau de bord, selon les besoins spécifiques de l’administration.
-        
         //* -> Initialise $adminUrlGenerator en récupérant le service AdminUrlGenerator depuis le conteneur de services de Symfony. Ce service permet de générer des URL pour les pages d’administration.
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
             /*
@@ -95,23 +77,6 @@ class DashboardController extends AbstractDashboardController
             */
         //* -> Redirige l’utilisateur vers l’URL générée pour le contrôleur UserCrudController. La méthode setController spécifie le contrôleur de destination, et generateUrl crée l’URL complète pour cette page d’administration.
         return $this->redirect($adminUrlGenerator->setController(UserCrudController::class)->generateUrl());
-            /*
-                - return : Mot-clé qui renvoie une réponse depuis la méthode.
-                - $this->redirect(...) : Redirige l’utilisateur vers une URL spécifique.
-                - $adminUrlGenerator->setController(UserCrudController::class) : Configure AdminUrlGenerator pour rediriger vers UserCrudController.
-                - generateUrl() : Génère l’URL complète à partir des paramètres définis et de la configuration d’EasyAdmin.
-            */
-
-        //* Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirect('...');
-        // }
-
-        //* Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        // return $this->render('some/path/my-dashboard.html.twig');
     }
 
     //! ** Méthode pour configurer les options generales pour le tableau de bord admin ** !//
@@ -122,66 +87,27 @@ class DashboardController extends AbstractDashboardController
         return Dashboard::new()
             ->setTitle('Luch Vintage');
     }
-        /*
-            - configureDashboard : Méthode qui configure le tableau de bord en définissant des options globales.
-            - () : Dashboard : Indique que la méthode retourne un objet Dashboard avec les options de configuration.
-            - Dashboard::new() : Crée une nouvelle instance de Dashboard.
-            - ->setTitle('Luch Vintage') : Définit le titre du tableau de bord comme Luch Vintage.
-        */
 
     //! ** Méthode pour configurer les elements du menu lateral du tableau de bord admin ** !//
     //* -> Déclare la méthode configureMenuItems, qui retourne un itérable (généralement une liste d’éléments). Cette méthode est utilisée pour configurer les éléments du menu latéral du tableau de bord d’administration.
     public function configureMenuItems(): iterable
-        /*
-            - configureMenuItems : Méthode qui configure les éléments de menu affichés dans la barre latérale d’administration.
-            - : iterable : Type de retour de la méthode, indiquant qu’elle retourne une liste d’éléments itérables (comme un tableau).
-        */
     {
         //* -> Ajoute un élément de menu qui renvoie à la page principale du tableau de bord. linkToDashboard crée le lien, Dashboard est le libellé du menu, et fa fa-home est la classe CSS qui affiche une icône de maison.
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-            /*
-                - yield : Mot-clé PHP pour retourner des valeurs dans une fonction génératrice.
-                - MenuItem::linkToDashboard(...) : Crée un lien vers le tableau de bord principal.
-                - Dashboard : Libellé du lien.
-                - fa fa-home : Classe d’icône CSS (FontAwesome) pour afficher une icône de maison.
-            */
 
         //* -> Ajoute un élément de menu pour accéder à la page CRUD (Create, Read, Update, Delete) de l’entité User. Utilisateurs est le libellé du menu, fas fa-list est la classe CSS pour une icône de liste, et User::class spécifie que cette page est dédiée à la gestion de l’entité User.
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-list', User::class);
-            /*
-                - MenuItem::linkToCrud(...) : Crée un lien vers une page CRUD pour l’entité User.
-                - Utilisateurs : Libellé du lien dans le menu.
-                - fas fa-list : Classe d’icône CSS (FontAwesome) pour une icône de liste.
-                - User::class : Spécifie que ce lien est associé à l’entité User, dirigeant vers sa gestion CRUD.
-            */
+
         //* -> Ajout d'un lien vers la page CRUD pour l'entité Category avec l'icône de liste.
         yield MenuItem::linkToCrud('Catégories', 'fas fa-list', Category::class);
 
         //* -> Ajout d'un lien vers la page CRUD pour l'entité Product avec l'icône de liste.
         yield MenuItem::linkToCrud('Produits', 'fas fa-list', Product::class);
-            /*
-                - 'Catégories' et 'Produits' : Libellés des liens.
-                - 'fas fa-list' : Icône de liste pour chaque entrée de menu.
-                - Category::class et Product::class : Associe chaque lien aux entités Category et Product.
-            */
+
         yield MenuItem::linkToCrud('Transporteurs', 'fas fa-list', Carrier::class);
-            /*
-                - yield :
-                    - Role : Le mot-clé yield est utilisé pour generer des valeurs dans une methode ou une fonction. Dans ce cas pour definir un element dans un menu EasyAdmin
-                    - Particularité : Contrairement à return, qui termine l'execution d'une methode, yield permet de generer plusieurs valeurs succesivement
-                - MenuItem::linkToCrud
-                    - Role : C'est une methode static de la class MenuItem. Elle permet de créer un element dans le menu EasyAdmin qui pointe vers une page CRUD   
-                    - Parametres :
-                        - 'Transporteurs' : Texte affiché dans le menu, ce sera visible dans l'interface d'administration
-                        - 'fas fa-list' : Nom de l'icone a afficher a coté du texte dans le menu. c'est une class CSS de FontAwesome (ici une icone de liste)
-                        - Carrier::class : Spécifie l'entité ou le contrôleur CRUD associé. Ici, Carrier::class pointe vers l'entité Carrier, qui doit être gérée par un contrôleur CRUD. Symfony utilise ce nom pour lier l'élément de menu au contrôleur CRUD correspondant.
-            */
+
         yield MenuItem::linkToCrud('Commandes', 'fas fa-list', Order::class);
-            /*
-                - Parametres :
-                    - ' Commande ' : Text affiché dans le menu, visible dans l'interface d'administration
-                    - Order::class : Specifie l'entité ou le controleur CRUD associé. Ici il point vers l'entité Order pour qui symfony et easyadmin gere par un CRUD controller (OrderCrudController.php)
-            */
+
         yield MenuItem::linkToCrud('Header', 'fas fa-list', Header::class);
 
     }

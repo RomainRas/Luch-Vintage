@@ -23,40 +23,18 @@ class Cart
 
     //! *********** Méthode pour ajouter un produit au panier ************* */
     public function add($product)
-        /*
-        function add($product) : Définit une méthode nommée add qui accepte un paramètre $product.
-        $product : Paramètre représentant le produit à ajouter au panier.
-        */
     {
-        // dd($product);
-
         //* -> Récupère le panier actuel depuis la session. Si "cart" n'existe pas encore, $cart sera NULL
         $cart = $this->requestStack->getSession()->get('cart');
-            /*
-            $cart : Variable qui stocke le contenu actuel du panier.
-            $this->requestStack : Accède à la propriété $requestStack de l’instance Cart actuelle.
-            getSession() : Méthode de RequestStack qui retourne la session active.
-            get('cart') : Récupère la clé cart de la session, c’est-à-dire le contenu du panier. Si cette clé n’existe pas, elle retourne NULL.
-            */
-
-        // dd($session);
 
         //* -> Vérifie si le produit est déjà dans le panier
         if(isset($cart[$product->getId()])) {
             // Si oui, augmente la quantité de ce produit de 1
-                /*
-                if (isset(...)) : Vérifie si le produit avec cet ID est déjà présent dans le panier.
-                $product->getId() : Appelle la méthode getId() du produit pour obtenir son ID unique.
-                */
+
             $cart[$product->getId()] = [
                 'objet' => $product, // Stocke l'objet produit
                 'qty' => $cart[$product->getID()]['qty'] + 1 
                     // Incrémente la quantité de 1
-                        /*
-                        $cart[$product->getId()] : Accède à l’élément du panier associé à cet ID.
-                        'objet' => $product : Stocke l’objet produit lui-même sous la clé 'objet' dans le tableau $cart.
-                        'qty' => $cart[$product->getId()]['qty'] + 1 : Si le produit existe, sa quantité ('qty') est augmentée de 1.
-                        */
             ];
             // Si le produit n'est pas encore dans le panier, l'ajoute avec une quantité de 1        
             } else { 
@@ -64,10 +42,6 @@ class Cart
                 'objet' => $product,
                 'qty' => 1
                     // Si le produit n’est pas dans le panier, on l’ajoute avec une quantité initiale de 1.
-                        /*
-                        else : Si le produit n’est pas dans le panier, ce bloc s’exécute.
-                        'qty' => 1 : Définit la quantité initiale du produit à 1 si le produit est ajouté pour la première fois.
-                        */
             ];     
         }
 
@@ -85,11 +59,6 @@ class Cart
     //! *********** Méthode pour diminuer la quantité d'un produit dans le panier ************* */
     //* -> Définit une méthode publique decrease pour diminuer la quantité d’un produit dans le panier.
     public function decrease($id)
-            /*
-            function decrease($id) : Définit une méthode qui diminue la quantité d’un produit dans le panier.
-            $id : Paramètre représentant l’identifiant du produit à modifier.
-            $cart : Variable qui stocke le contenu actuel du panier.
-            */
     {
         //* -> Récupère le panier actuel depuis la session
         $cart = $this->requestStack->getSession()->get('cart');
@@ -132,11 +101,6 @@ class Cart
         foreach ($cart as $product) {
             $quantity = $product['qty']; // Ajoute la quantité de chaque produit au total
         }
-            /*
-            foreach ($cart as $product) : Parcourt chaque produit dans le panier.
-            $quantity += $product['qty']; : Ajoute la quantité de chaque produit au total $quantity.
-            */
-
         //* -> Retourne la quantité totale
         return $quantity;
     }

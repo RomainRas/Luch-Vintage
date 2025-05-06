@@ -70,10 +70,6 @@ class ProductCrudController extends AbstractCrudController
         */
     //! ** Méthode pour configurer les champs affichés dans le CRUD ** !//
     public function configureFields(string $pageName): iterable
-        /*
-            - string $pageName : Paramètre pour définir la page (par exemple, 'index', 'edit').
-            - : iterable : La méthode retourne un ensemble de champs sous forme d’itérable.
-        */
     {
         //* Définit une variable $required comme true, qui sera utilisée pour configurer le champ ImageField.
         $required = true;
@@ -87,16 +83,6 @@ class ProductCrudController extends AbstractCrudController
             TextField::new('name') // Crée un champ de type texte pour l’attribut name.
                 ->setLabel('Nom') // Définit le label du champ
                 ->setHelp("Nom de votre Produit"), // Message d’aide
-                
-            //* Champ pour ajouter un produit à la une sur la homepage
-            BooleanField::new('isHomepage') 
-                /*
-                    - BooleanField : Classe fournie par EasyAdmin pour gérer les valeurs booléennes (vrai ou faux). Case a cocher
-                    - Méthode new : Crée une nouvelle instance de BooleanField.
-                    - 'isHomepage' : Nom de la propriété de l'entité associée à ce champ. Cela correspond à un champ booléen (type boolean ou bool) dans la classe de l'entité.
-                */
-                ->setLabel('Produit à la une')
-                ->setHelp('Vous permet d\'afficher ce produit à la une'),
 
             //* Champ pour l’URL générée automatiquement.
             SlugField::new('slug') // Le champ slug est généré à partir de name.
@@ -166,4 +152,3 @@ class ProductCrudController extends AbstractCrudController
 
     * Ce contrôleur rend l'interface CRUD pour Product intuitive et adaptée aux besoins de gestion, tout en respectant les spécifications et les contraintes nécessaires pour chaque champ.
     */
-
