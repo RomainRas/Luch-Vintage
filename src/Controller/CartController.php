@@ -14,6 +14,7 @@ namespace App\Controller;
 use App\Classe\Cart;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,10 +56,11 @@ class CartController extends AbstractController
             - defaults: [ 'motif' => null ]Définit une valeur par défaut pour le paramètre {motif}. Si aucune valeur n’est passée dans l’URL, le paramètre sera null.
         */
     //! ** Méthode pour afficher le panier de l’utilisateur  et gere le cas d'annulation d'en paiement** !//
-    public function index(cart $cart, $motif): Response
+    public function index(Cart $cart, ?string $motif): Response
         /*
-            - public function index(Cart $cart): Response : Méthode publique pour afficher le contenu du panier.
+            - public function index(Cart $cart, ?string $motif): Response : Méthode publique pour afficher le contenu du panier.
             - Cart $cart : Paramètre injecté représentant le service Cart.
+            - ?string $motif : Paramètre optionnel pour gérer l'affichage selon le motif.
             - : Response : Spécifie que cette méthode retourne un objet Response.
         */
     {
@@ -98,10 +100,10 @@ class CartController extends AbstractController
             - name: 'app_cart_add' : Nom unique de la route, permettant de la référencer ailleurs.
         */
     //! ** Méthode pour ajouter un produit au panier  ** !//
-    public function add($id, Cart $cart, ProductRepository $productRepository, Request $request): Response
+    public function add(int $id, Cart $cart, ProductRepository $productRepository, Request $request): RedirectResponse
         /*
-            - public function add($id, Cart $cart, ProductRepository $productRepository, Request $request): Response : Méthode pour ajouter un produit au panier.
-            - $id : Paramètre représentant l’identifiant du produit.
+            - public function add(int $id, Cart $cart, ProductRepository $productRepository, Request $request): RedirectResponse : Méthode pour ajouter un produit au panier.
+            - int $id : Paramètre représentant l’identifiant du produit.
             - Cart $cart : Paramètre pour le service Cart.
             - ProductRepository $productRepository : Paramètre pour accéder aux données des produits.
             - Request $request : Paramètre pour accéder aux informations de la requête.
@@ -143,10 +145,10 @@ class CartController extends AbstractController
             - name: 'app_cart_decrease' : Nom unique de la route.
         */
     //! ** Méthode pour diminuer la quantité d'un produit dans le panier  ** /
-    public function decrease($id, Cart $cart): Response
+    public function decrease(int $id, Cart $cart): RedirectResponse
         /*
-            - public function decrease($id, Cart $cart): Response : Méthode pour diminuer la quantité d’un produit dans le panier.
-            - $id : Identifiant du produit.
+            - public function decrease(int $id, Cart $cart): RedirectResponse : Méthode pour diminuer la quantité d’un produit dans le panier.
+            - int $id : Identifiant du produit.
             - Cart $cart : Service Cart pour gérer le panier.
         */
     {
@@ -175,9 +177,9 @@ class CartController extends AbstractController
             - name: 'app_cart_remove' : Nom unique de la route.
         */
     //! ** Méthode pour vider le panier  ** !//
-    public function remove( Cart $cart): Response
+    public function remove(Cart $cart): RedirectResponse
         /*
-            - public function remove(Cart $cart): Response : Méthode pour vider complètement le panier.
+            - public function remove(Cart $cart): RedirectResponse : Méthode pour vider complètement le panier.
             - Cart $cart : Service Cart pour manipuler le panier.
         */
     {
