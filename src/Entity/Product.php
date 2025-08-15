@@ -209,9 +209,15 @@ class Product
         */
 
     //* -> Calcule le prix TTC en appliquant le taux de TVA au prix HT.
-    public function getPriceWt()
+    /**
+     * Calcule le prix TTC avec la formule `price * (1 + tva/100)`.
+     *
+     * @return float Prix TTC
+     */
+    public function getPriceWt(): float
     {
-        $coeff = 1 + ($this->tva/100);
+        $coeff = 1 + ($this->tva / 100);
+
         return $coeff * $this->price;
     }
         /*
