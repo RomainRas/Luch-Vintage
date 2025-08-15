@@ -43,7 +43,7 @@ class ProductController extends AbstractController
 
     //! ** Méthode pour afficher les détails d'un produit spécifique en fonction de son slug. ** !//
     //* -> `ProductRepository $productRepository` est injecté pour interagir avec la base de données des produits.
-    public function index($slug, ProductRepository $productRepository): Response
+    public function index(string $slug, ProductRepository $productRepository): Response
 
     {
         //* -> Recherche le produit correspondant au slug dans la base de données via le repository `ProductRepository`.
