@@ -79,13 +79,10 @@ class Product
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $category = null;
 
+    //! ** isHomepage ** !//
+    //* -> Indique si le produit doit apparaître sur la page d'accueil.
     #[ORM\Column(nullable: true)]
-    public ?bool $isHomepage = null;
-        /*
-            - #[ORM\ManyToOne(...)] : Définit une relation ManyToOne avec l’entité Category.
-            - inversedBy: 'products' : Indique que la relation inverse est définie par la propriété products dans l’entité Category.
-            - private ?Category $category = null : Propriété pour stocker la catégorie à laquelle appartient le produit.
-        */
+    private ?bool $isHomepage = null;
 
     /*
     ************************************************************
