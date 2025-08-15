@@ -99,7 +99,7 @@ class Cart
 
         //* -> Ajoute la quantité de chaque produit au total
         foreach ($cart as $product) {
-            $quantity = $product['qty']; // Ajoute la quantité de chaque produit au total
+            $quantity += $product['qty']; // Ajoute la quantité de chaque produit au total
         }
         //* -> Retourne la quantité totale
         return $quantity;
